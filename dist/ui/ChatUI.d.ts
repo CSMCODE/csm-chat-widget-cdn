@@ -41,11 +41,15 @@ export declare class ChatUI {
     mount(): void;
     /** Pin-to-bottom when the user is following; re-scroll after lazy media / staged DOM without ResizeObserver on scrollHeight-only growth. */
     private attachTranscriptScrollBehavior;
-    renderNode(node: FlowNode, context?: Record<string, unknown>): void;
+    renderNode(node: FlowNode, context?: Record<string, unknown>, options?: {
+        readOnly?: boolean;
+    }): void;
     /** Same key mapping as `ConversationEngine.processFormSubmit`, so `submitMessage` can interpolate before the engine runs. */
     private mergeFormValuesIntoContext;
     private submitInput;
     private renderUserMessage;
+    private clearTranscript;
+    private hydrateTranscript;
     unmount(): void;
     private resizeInputField;
     private updateSendDisabled;

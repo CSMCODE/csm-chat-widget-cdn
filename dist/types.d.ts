@@ -1,3 +1,4 @@
+import { VisitorIdentity } from './utils/visitorId';
 /**
  * Represents the various actions that can be triggered by options, input submissions, or node lifecycles.
  */
@@ -287,6 +288,30 @@ export interface ChatWidgetConfig {
      */
     readonly brandAvatarUrl?: string;
 }
+export type TranscriptEntry = {
+    readonly kind: 'bot';
+    readonly flowId: string;
+    readonly nodeId: string;
+    readonly ts: number;
+} | {
+    readonly kind: 'user_text';
+    readonly flowId: string;
+    readonly nodeId: string;
+    readonly text: string;
+    readonly ts: number;
+} | {
+    readonly kind: 'user_option';
+    readonly flowId: string;
+    readonly nodeId: string;
+    readonly label: string;
+    readonly ts: number;
+} | {
+    readonly kind: 'user_form';
+    readonly flowId: string;
+    readonly nodeId: string;
+    readonly submitEcho: string;
+    readonly ts: number;
+};
 /**
  * Structure of the conversation state that is saved and restored from localStorage.
  */
@@ -305,7 +330,10 @@ export interface WidgetPersistedState {
         readonly nodeId: string;
         readonly timestamp: number;
     }[];
+    readonly transcript: readonly TranscriptEntry[];
     readonly context: Record<string, unknown>;
+    /** Mirrors `cwSessionUserId` to avoid cross-user resume when `storageKey` is shared. */
+    readonly sessionOwnerId?: string;
     readonly inputEnabled: boolean;
     readonly isOpen: boolean;
 }
@@ -322,11 +350,20 @@ export interface WidgetState {
     readonly isOpen: boolean;
     readonly inputEnabled: boolean;
 }
+export type { VisitorIdentity } from './utils/visitorId';
 /**
  * The complete public API for the Chat Widget SDK available globally on the window.
  */
 export interface ChatWidget {
     init(config: ChatWidgetConfig): Promise<void>;
+    /**
+     * Stable anonymous id for this browser on the current origin.
+     * Reads `localStorage` first; creates and stores a UUID on first visit.
+     * Use the same `storageKey` as `init({ storageKey })` and pass `visitorId` as `clientUserId`.
+     */
+    getOrCreateVisitorId(storageKey: string): VisitorIdentity;
+    /** Read stored visitor id without creating one; null when none exists yet. */
+    peekVisitorId(storageKey: string): VisitorIdentity | null;
     /** Hide or show the whole embed (`#chat-widget-root`). Queued before `init` like other imperative APIs. Not persisted. */
     setEmbedVisible(visible: boolean): void;
     open(): void;

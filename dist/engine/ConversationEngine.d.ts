@@ -22,8 +22,12 @@ export declare class ConversationEngine {
     private renderGeneration;
     /** True only while rendering a node rehydrated from persisted state (`restoreState`). Suppresses `flowCompleted` on rehydration. */
     private restoreHydrationRender;
+    /** True only while resume fast-forward is running chained `onEnter` actions without delays. */
+    private isResumeFastForward;
     constructor(router: FlowRouter, actionProcessor: ActionProcessor, state: StateManager, bus: EventBus, typingDelayMs?: number, debug?: boolean);
     private restoreState;
+    hasRestorableSession(): boolean;
+    resumeSession(): boolean;
     private saveState;
     private pushHistory;
     /**
@@ -39,6 +43,7 @@ export declare class ConversationEngine {
     resetFlow(): void;
     back(): void;
     goToFlowStart(flowId: string): void;
+    clearSession(): void;
     processInput(text: string): void;
     /** Multi-field `input.form`: merges values into context, then runs `onSubmit` actions. */
     processFormSubmit(values: Record<string, string>): void;
@@ -51,6 +56,8 @@ export declare class ConversationEngine {
     getState(): WidgetState;
     private clearPendingTyping;
     private clearPendingWait;
+    private nodeWaitsForUser;
+    private fastForwardAutoChainFromActiveNode;
     private warnMissingContextKeysForRender;
     private emitRenderAndFollowup;
     private renderNode;

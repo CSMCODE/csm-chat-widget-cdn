@@ -1,5 +1,6 @@
 import { ChatWidget as IChatWidget, ChatWidgetConfig, FooterCtaConfig, WidgetState } from './types';
 export * from './types';
+export { getOrCreateVisitorId, peekVisitorId } from './utils/visitorId';
 declare class ChatWidgetImpl implements IChatWidget {
     private bus;
     private stateManager?;
@@ -7,6 +8,7 @@ declare class ChatWidgetImpl implements IChatWidget {
     private actionProcessor?;
     private engine?;
     private ui?;
+    private transcriptRecorder?;
     private isInitialized;
     /** Mirrors DOM embed visibility (`setEmbedVisible` / `init.embedVisible`). Not persisted. */
     private embedChromeVisible;
@@ -37,6 +39,8 @@ declare class ChatWidgetImpl implements IChatWidget {
     mergeContext(data: Record<string, string | number | boolean>): void;
     runIfSessionMatches(remoteClientUserId: string, fn: () => void): boolean;
     getState(): WidgetState;
+    getOrCreateVisitorId(storageKey: string): import('./types').VisitorIdentity;
+    peekVisitorId(storageKey: string): import('./types').VisitorIdentity | null;
     clearState(): void;
     setFooterCta(config: FooterCtaConfig | null): void;
     on(event: string, callback: (payload?: unknown) => void): () => void;

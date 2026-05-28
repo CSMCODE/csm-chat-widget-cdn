@@ -899,7 +899,7 @@ class FlowRouter {
     return Array.from(this.flowEntries.keys());
   }
 }
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
 class StateManager {
   // 80 KB
   constructor(consumerStorageKey, debug = false) {
@@ -953,6 +953,7 @@ class StateManager {
       activeNodeId: null,
       flowStack: [],
       history: [],
+      transcript: [],
       context: {},
       inputEnabled: true,
       isOpen: false
@@ -962,9 +963,24 @@ class StateManager {
     const stateToSave = { ...data, version: SCHEMA_VERSION, lastSeenAt: Date.now() };
     let serialized = JSON.stringify(stateToSave);
     if (serialized.length > this.SIZE_LIMIT) {
-      const prunedHistory = stateToSave.history.slice(-20);
-      const prunedState = { ...stateToSave, history: prunedHistory };
+      let prunedState = {
+        ...stateToSave,
+        history: stateToSave.history.slice(-20)
+      };
       serialized = JSON.stringify(prunedState);
+      if (serialized.length > this.SIZE_LIMIT) {
+        const transcript = [...prunedState.transcript];
+        while (transcript.length > 30) {
+          transcript.shift();
+          prunedState = { ...prunedState, transcript: [...transcript] };
+          serialized = JSON.stringify(prunedState);
+          if (serialized.length <= this.SIZE_LIMIT) break;
+        }
+      }
+      if (serialized.length > this.SIZE_LIMIT) {
+        const fallbackTranscript = prunedState.transcript.slice(-10);
+        serialized = JSON.stringify({ ...prunedState, transcript: fallbackTranscript });
+      }
     }
     this.setItem(this.storageKey, serialized);
   }
@@ -1101,6 +1117,7 @@ class ConversationEngine {
     this.pendingWaitTimer = null;
     this.renderGeneration = 0;
     this.restoreHydrationRender = false;
+    this.isResumeFastForward = false;
     this.restoreState();
     this.bus.on("__goToNode", (payload) => this.goToNode(payload.nodeId, payload.flowId));
     this.bus.on("__startFlow", (payload) => this.startFlow(payload.flowId));
@@ -1126,27 +1143,56 @@ class ConversationEngine {
     this.history = [...currentState.history];
     this.flowStack = [...currentState.flowStack];
     this.context = { ...currentState.context };
-    if (this.activeFlowId && this.activeNodeId) {
-      const node = this.router.getNode(this.activeFlowId, this.activeNodeId);
-      if (node) {
-        this.restoreHydrationRender = true;
-        try {
-          this.renderNode(node, this.activeFlowId, { immediate: true });
-        } finally {
-          this.restoreHydrationRender = false;
-        }
+  }
+  hasRestorableSession() {
+    return Boolean(this.activeFlowId && this.activeNodeId);
+  }
+  resumeSession() {
+    if (!this.activeFlowId || !this.activeNodeId) return false;
+    const node = this.router.getNode(this.activeFlowId, this.activeNodeId);
+    if (!node) return false;
+    const persisted = this.state.restore();
+    const hydratedEntries = [];
+    for (const entry of persisted.transcript) {
+      if (entry.kind !== "bot") {
+        hydratedEntries.push(entry);
+        continue;
       }
+      const botNode = this.router.getNode(entry.flowId, entry.nodeId);
+      if (!botNode) continue;
+      hydratedEntries.push({ ...entry, node: botNode });
     }
+    const historyEntries = hydratedEntries.filter((entry) => {
+      if (entry.kind !== "bot") return true;
+      return !(entry.flowId === this.activeFlowId && entry.nodeId === this.activeNodeId);
+    });
+    this.restoreHydrationRender = true;
+    try {
+      this.bus.emit("__transcriptReplayStart");
+      this.bus.emit("__hydrateTranscript", {
+        entries: historyEntries,
+        context: this.context
+      });
+      this.renderNode(node, this.activeFlowId, { immediate: true, hydrate: true });
+    } finally {
+      this.restoreHydrationRender = false;
+      this.bus.emit("__transcriptReplayEnd");
+    }
+    this.fastForwardAutoChainFromActiveNode();
+    return true;
   }
   saveState() {
     const currentState = this.state.restore();
+    const sessionOwnerRaw = this.context.cwSessionUserId;
+    const sessionOwnerId = typeof sessionOwnerRaw === "string" ? sessionOwnerRaw.trim() : sessionOwnerRaw != null && (typeof sessionOwnerRaw === "number" || typeof sessionOwnerRaw === "boolean") ? String(sessionOwnerRaw).trim() : "";
     this.state.save({
       ...currentState,
       activeFlowId: this.activeFlowId,
       activeNodeId: this.activeNodeId,
       history: this.history,
       flowStack: this.flowStack,
-      context: this.context
+      context: this.context,
+      sessionOwnerId: sessionOwnerId || void 0
     });
   }
   pushHistory(flowId, nodeId) {
@@ -1253,6 +1299,15 @@ class ConversationEngine {
     }
     this.startFlow(flowId);
   }
+  clearSession() {
+    this.clearPendingTyping();
+    this.clearPendingWait();
+    this.activeFlowId = null;
+    this.activeNodeId = null;
+    this.history = [];
+    this.flowStack = [];
+    this.context = {};
+  }
   processInput(text) {
     var _a;
     if (!this.activeFlowId || !this.activeNodeId) return;
@@ -1285,15 +1340,15 @@ class ConversationEngine {
     if (!this.activeFlowId) return;
     this.executeActions(actions);
   }
-  executeActions(actions, userInput) {
+  executeActions(actions, userInput, options) {
     if (!this.activeFlowId || !this.activeNodeId) return;
     this.clearPendingWait();
-    this.runActionSlice(actions, 0, userInput);
+    this.runActionSlice(actions, 0, userInput, (options == null ? void 0 : options.resumeMode) === true);
   }
   /**
    * Runs actions in order; `wait` defers the rest of the list until after `ms` (clamped 0–60_000).
    */
-  runActionSlice(actions, startIndex, userInput) {
+  runActionSlice(actions, startIndex, userInput, resumeMode = false) {
     if (!this.activeFlowId || !this.activeNodeId) return;
     for (let i = startIndex; i < actions.length; i++) {
       const action = actions[i];
@@ -1301,12 +1356,12 @@ class ConversationEngine {
         const raw = action.ms;
         const ms = typeof raw === "number" && Number.isFinite(raw) ? Math.max(0, Math.min(6e4, Math.floor(raw))) : 0;
         const next = i + 1;
-        if (ms <= 0) {
+        if (resumeMode || ms <= 0) {
           continue;
         }
         this.pendingWaitTimer = setTimeout(() => {
           this.pendingWaitTimer = null;
-          this.runActionSlice(actions, next, userInput);
+          this.runActionSlice(actions, next, userInput, resumeMode);
         }, ms);
         return;
       }
@@ -1340,6 +1395,36 @@ class ConversationEngine {
       this.pendingWaitTimer = null;
     }
   }
+  nodeWaitsForUser(node) {
+    var _a, _b, _c, _d;
+    if (node.terminal) return true;
+    if (Array.isArray(node.options) && node.options.length > 0) return true;
+    if ((_c = (_b = (_a = node.input) == null ? void 0 : _a.form) == null ? void 0 : _b.fields) == null ? void 0 : _c.length) return true;
+    return ((_d = node.input) == null ? void 0 : _d.enabled) === true;
+  }
+  fastForwardAutoChainFromActiveNode(maxSteps = 20) {
+    var _a;
+    this.isResumeFastForward = true;
+    let steps = 0;
+    try {
+      while (steps < maxSteps && this.activeFlowId && this.activeNodeId) {
+        const node = this.router.getNode(this.activeFlowId, this.activeNodeId);
+        if (!node) break;
+        if (this.nodeWaitsForUser(node)) break;
+        if (!((_a = node.onEnter) == null ? void 0 : _a.length)) break;
+        const beforeFlowId = this.activeFlowId;
+        const beforeNodeId = this.activeNodeId;
+        this.executeActions(node.onEnter, void 0, { resumeMode: true });
+        steps += 1;
+        if (this.activeFlowId === beforeFlowId && this.activeNodeId === beforeNodeId) {
+          break;
+        }
+      }
+      this.saveState();
+    } finally {
+      this.isResumeFastForward = false;
+    }
+  }
   warnMissingContextKeysForRender(node) {
     if (!this.debug || !node.message) return;
     const paths = extractContextKeysFromTemplate(node.message);
@@ -1354,14 +1439,14 @@ class ConversationEngine {
       );
     }
   }
-  emitRenderAndFollowup(node, flowId) {
+  emitRenderAndFollowup(node, flowId, options) {
     this.warnMissingContextKeysForRender(node);
-    this.bus.emit("__render", { node, context: this.context, debug: this.debug });
-    if (node.terminal && !this.restoreHydrationRender) {
+    this.bus.emit("__render", { node, context: this.context, debug: this.debug, flowId });
+    if (node.terminal && !this.restoreHydrationRender && !(options == null ? void 0 : options.hydrate)) {
       this.bus.emit("flowCompleted", { flowId });
     }
     const onEnter = node.onEnter;
-    if (!(onEnter == null ? void 0 : onEnter.length)) return;
+    if (!(onEnter == null ? void 0 : onEnter.length) || this.restoreHydrationRender || (options == null ? void 0 : options.hydrate) || this.isResumeFastForward) return;
     const enterFlowId = flowId;
     const enterNodeId = node.id;
     queueMicrotask(() => {
@@ -1377,17 +1462,17 @@ class ConversationEngine {
     this.renderGeneration += 1;
     const generation = this.renderGeneration;
     this.bus.emit("nodeEntered", { nodeId: node.id, flowId });
-    const immediate = Boolean((options == null ? void 0 : options.immediate) || node.immediateRender);
+    const immediate = Boolean(this.isResumeFastForward || (options == null ? void 0 : options.immediate) || node.immediateRender);
     const delay = immediate || this.typingDelayMs <= 0 ? 0 : this.typingDelayMs;
     if (delay === 0) {
-      this.emitRenderAndFollowup(node, flowId);
+      this.emitRenderAndFollowup(node, flowId, options);
       return;
     }
     this.bus.emit("__typingStart", {});
     this.pendingTypingTimer = setTimeout(() => {
       this.pendingTypingTimer = null;
       if (generation !== this.renderGeneration) return;
-      this.emitRenderAndFollowup(node, flowId);
+      this.emitRenderAndFollowup(node, flowId, options);
     }, delay);
   }
   exitNode(node, flowId) {
@@ -3877,6 +3962,12 @@ class ChatUI {
       this.syncFooterCtaContent();
       this.syncFooterVisibility();
     });
+    this.bus.on("__hydrateTranscript", (payload) => {
+      var _a;
+      const entries = Array.isArray(payload == null ? void 0 : payload.entries) ? payload.entries : [];
+      const context = (_a = payload == null ? void 0 : payload.context) != null ? _a : {};
+      this.hydrateTranscript(entries, context);
+    });
     this.bus.on("__setFooterCta", (payload) => {
       this.footerCtaConfig = payload.config;
       if (this.footerCtaBtn && payload.config) {
@@ -3910,6 +4001,7 @@ class ChatUI {
     this.bus.on("__renderUserEcho", (text) => {
       this.renderUserMessage(String(text).replace(/<[^>]*>?/gm, "").trim());
     });
+    this.bus.on("stateCleared", () => this.clearTranscript());
   }
   /** Hide or show the entire widget chrome (launcher + panel). Host-facing API delegates here. */
   setEmbedVisible(visible) {
@@ -4057,8 +4149,9 @@ class ChatUI {
       attributes: true
     });
   }
-  renderNode(node, context = {}) {
+  renderNode(node, context = {}, options) {
     var _a, _b, _c, _d, _e, _f, _g;
+    const readOnly = Boolean(options == null ? void 0 : options.readOnly);
     const hasForm = Boolean((_c = (_b = (_a = node.input) == null ? void 0 : _a.form) == null ? void 0 : _b.fields) == null ? void 0 : _c.length);
     const skipEmptyIntroBubble = hasForm && !((_d = node.message) == null ? void 0 : _d.trim()) && !node.media;
     if (!skipEmptyIntroBubble) {
@@ -4071,13 +4164,14 @@ class ChatUI {
       );
       this.messagesArea.appendChild(msgEl);
     }
-    if (node.options && node.options.length > 0) {
+    if (!readOnly && node.options && node.options.length > 0) {
       const optsEl = this.optionsRenderer.renderOptions(
         node.options,
         (actions, label) => {
           this.pendingForceScroll = true;
           this.renderUserMessage(label);
-          this.bus.emit("__optionClick", { actions, label, nodeId: node.id });
+          this.bus.emit("__recordUserOption", { label, nodeId: node.id, flowId: this.activeFlowId });
+          this.bus.emit("__optionClick", { actions, nodeId: node.id, flowId: this.activeFlowId });
         },
         context,
         void 0,
@@ -4085,7 +4179,7 @@ class ChatUI {
       );
       this.messagesArea.appendChild(optsEl);
     }
-    if ((_g = (_f = (_e = node.input) == null ? void 0 : _e.form) == null ? void 0 : _f.fields) == null ? void 0 : _g.length) {
+    if (!readOnly && ((_g = (_f = (_e = node.input) == null ? void 0 : _e.form) == null ? void 0 : _f.fields) == null ? void 0 : _g.length)) {
       const formEl = renderFormBlock(
         node,
         context,
@@ -4097,6 +4191,11 @@ class ChatUI {
           this.pendingForceScroll = true;
           this.bus.emit("messageSent", {
             text: messageSentText,
+            nodeId: node.id,
+            flowId: this.activeFlowId
+          });
+          this.bus.emit("__formSubmitted", {
+            submitEcho: messageSentText,
             nodeId: node.id,
             flowId: this.activeFlowId
           });
@@ -4145,6 +4244,33 @@ class ChatUI {
     userMsg.textContent = text;
     this.messagesArea.appendChild(userMsg);
     this.scrollToLatest(true);
+  }
+  clearTranscript() {
+    if (!this.messagesArea) return;
+    this.messagesArea.replaceChildren();
+    this.removeTypingIndicator();
+    this.followLatest = true;
+  }
+  hydrateTranscript(entries, context) {
+    this.clearTranscript();
+    this.lastContext = context != null ? context : {};
+    for (const entry of entries) {
+      if (entry.kind === "bot") {
+        const botNode = entry.node;
+        if (!botNode) continue;
+        this.renderNode(botNode, this.lastContext, { readOnly: true });
+        continue;
+      }
+      if (entry.kind === "user_text") {
+        this.renderUserMessage(entry.text);
+        continue;
+      }
+      if (entry.kind === "user_option") {
+        this.renderUserMessage(entry.label);
+        continue;
+      }
+      this.renderUserMessage(entry.submitEcho);
+    }
   }
   unmount() {
     var _a;
@@ -4211,7 +4337,7 @@ class ChatUI {
       btn.setAttribute("aria-label", label);
       btn.addEventListener("click", () => {
         this.pendingForceScroll = true;
-        this.bus.emit("__optionClick", { actions: link.actions, label, nodeId: node.id });
+        this.bus.emit("__optionClick", { actions: link.actions, label, nodeId: node.id, flowId: this.activeFlowId });
       });
       this.footerLinksRow.appendChild(btn);
     }
@@ -4318,7 +4444,8 @@ class ChatUI {
     this.bus.emit("__optionClick", {
       actions: cfg.actions,
       label,
-      nodeId: this.activeNodeId
+      nodeId: this.activeNodeId,
+      flowId: this.activeFlowId
     });
   }
   showTypingIndicator() {
@@ -4340,6 +4467,162 @@ class ChatUI {
     }
     this.typingIndicatorEl = null;
   }
+}
+class TranscriptRecorder {
+  constructor(bus, state) {
+    this.bus = bus;
+    this.state = state;
+    this.unsubs = [];
+    this.isReplaying = false;
+    this.unsubs.push(
+      this.bus.on("__transcriptReplayStart", () => {
+        this.isReplaying = true;
+      }),
+      this.bus.on("__transcriptReplayEnd", () => {
+        this.isReplaying = false;
+      }),
+      this.bus.on("__render", (payload) => {
+        var _a;
+        if (this.isReplaying) return;
+        const state2 = this.state.restore();
+        const flowId = this.normalizeText(payload == null ? void 0 : payload.flowId) || this.normalizeText(state2.activeFlowId);
+        const nodeId = this.normalizeText((_a = payload == null ? void 0 : payload.node) == null ? void 0 : _a.id) || this.normalizeText(state2.activeNodeId);
+        if (!flowId || !nodeId) return;
+        this.append({
+          kind: "bot",
+          flowId,
+          nodeId,
+          ts: Date.now()
+        });
+      }),
+      this.bus.on("__recordUserOption", (payload) => {
+        if (this.isReplaying) return;
+        const state2 = this.state.restore();
+        const flowId = this.normalizeText(payload == null ? void 0 : payload.flowId) || this.normalizeText(state2.activeFlowId);
+        const nodeId = this.normalizeText(payload == null ? void 0 : payload.nodeId);
+        const label = this.normalizeText(payload == null ? void 0 : payload.label);
+        if (!flowId || !nodeId || !label) return;
+        this.append({
+          kind: "user_option",
+          flowId,
+          nodeId,
+          label,
+          ts: Date.now()
+        });
+      }),
+      this.bus.on("messageSent", (payload) => {
+        if (this.isReplaying) return;
+        const state2 = this.state.restore();
+        const flowId = this.normalizeText(payload == null ? void 0 : payload.flowId) || this.normalizeText(state2.activeFlowId);
+        const nodeId = this.normalizeText(payload == null ? void 0 : payload.nodeId) || this.normalizeText(state2.activeNodeId);
+        const text = this.normalizeText(payload == null ? void 0 : payload.text);
+        if (!flowId || !nodeId || !text) return;
+        this.append({
+          kind: "user_text",
+          flowId,
+          nodeId,
+          text,
+          ts: Date.now()
+        });
+      }),
+      this.bus.on("__formSubmitted", (payload) => {
+        if (this.isReplaying) return;
+        const state2 = this.state.restore();
+        const flowId = this.normalizeText(payload == null ? void 0 : payload.flowId) || this.normalizeText(state2.activeFlowId);
+        const nodeId = this.normalizeText(payload == null ? void 0 : payload.nodeId) || this.normalizeText(state2.activeNodeId);
+        const submitEcho = this.normalizeText(payload == null ? void 0 : payload.submitEcho);
+        if (!flowId || !nodeId || !submitEcho) return;
+        this.append({
+          kind: "user_form",
+          flowId,
+          nodeId,
+          submitEcho,
+          ts: Date.now()
+        });
+      }),
+      this.bus.on("stateCleared", () => {
+        this.clear();
+      })
+    );
+  }
+  destroy() {
+    for (const unsub of this.unsubs) unsub();
+    this.unsubs.length = 0;
+  }
+  clear() {
+    const currentState = this.state.restore();
+    this.state.save({ ...currentState, transcript: [] });
+  }
+  append(entry) {
+    const currentState = this.state.restore();
+    const transcript = [...currentState.transcript, entry];
+    this.state.save({
+      ...currentState,
+      transcript
+    });
+  }
+  normalizeText(value) {
+    return typeof value === "string" ? value.trim() : "";
+  }
+}
+const VISITOR_KEY_SUFFIX = "_visitor_id";
+const LEGACY_CLIENT_USER_KEY_SUFFIX = "_client_user_id";
+function storageKeyForVisitor(storageKey) {
+  const base = typeof storageKey === "string" && storageKey.trim() !== "" ? storageKey.trim() : "default";
+  return `cw_${base}${VISITOR_KEY_SUFFIX}`;
+}
+function legacyStorageKeyForVisitor(storageKey) {
+  const base = typeof storageKey === "string" && storageKey.trim() !== "" ? storageKey.trim() : "default";
+  return `cw_${base}${LEGACY_CLIENT_USER_KEY_SUFFIX}`;
+}
+function createVisitorId() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `cw_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 11)}`;
+}
+function readStoredVisitorId(primaryKey, legacyKey) {
+  try {
+    const primary = localStorage.getItem(primaryKey);
+    if (typeof primary === "string" && primary.trim() !== "") {
+      return primary.trim();
+    }
+    const legacy = localStorage.getItem(legacyKey);
+    if (typeof legacy === "string" && legacy.trim() !== "") {
+      const id = legacy.trim();
+      try {
+        localStorage.setItem(primaryKey, id);
+      } catch (e) {
+      }
+      return id;
+    }
+  } catch (e) {
+  }
+  return null;
+}
+function writeStoredVisitorId(key, visitorId) {
+  try {
+    localStorage.setItem(key, visitorId);
+  } catch (e) {
+  }
+}
+function peekVisitorId(storageKey) {
+  const key = storageKeyForVisitor(storageKey);
+  const legacyKey = legacyStorageKeyForVisitor(storageKey);
+  const existing = readStoredVisitorId(key, legacyKey);
+  if (!existing) return null;
+  return { visitorId: existing, isReturning: true };
+}
+function getOrCreateVisitorId(storageKey) {
+  const key = storageKeyForVisitor(storageKey);
+  const legacyKey = legacyStorageKeyForVisitor(storageKey);
+  const existing = readStoredVisitorId(key, legacyKey);
+  if (existing) {
+    return { visitorId: existing, isReturning: true };
+  }
+  const visitorId = createVisitorId();
+  writeStoredVisitorId(key, visitorId);
+  return { visitorId, isReturning: false };
 }
 function flowsFromFetchedJson(data) {
   if (Array.isArray(data)) return data;
@@ -4427,6 +4710,13 @@ class ChatWidgetImpl {
         safeConfig.storageKey || "cw-default-store",
         Boolean(safeConfig.debug)
       );
+      const sessionClientId = typeof safeConfig.clientUserId === "string" && safeConfig.clientUserId.trim() !== "" ? safeConfig.clientUserId.trim() : "";
+      if (sessionClientId) {
+        const restored = this.stateManager.restore();
+        if (typeof restored.sessionOwnerId === "string" && restored.sessionOwnerId.trim() !== "" && restored.sessionOwnerId.trim() !== sessionClientId) {
+          this.stateManager.clear();
+        }
+      }
       this.actionProcessor = new ActionProcessor(
         this.router,
         this.bus,
@@ -4444,6 +4734,7 @@ class ChatWidgetImpl {
       const avatarSrc = typeof safeConfig.brandAvatarUrl === "string" && safeConfig.brandAvatarUrl.length > 0 ? safeConfig.brandAvatarUrl : BUNDLED_BOT_AVATAR_URL;
       this.ui = new ChatUI(this.bus, avatarSrc);
       this.ui.mount();
+      this.transcriptRecorder = new TranscriptRecorder(this.bus, this.stateManager);
       this.embedChromeVisible = safeConfig.embedVisible !== false;
       this.ui.setEmbedVisible(this.embedChromeVisible);
       if (Boolean(safeConfig.hideEmbedOnClose)) {
@@ -4474,20 +4765,27 @@ class ChatWidgetImpl {
         this.bus.emit("__setFooterCta", { config: safeConfig.footerCta });
       }
       this.isInitialized = true;
-      const sessionClientId = typeof safeConfig.clientUserId === "string" && safeConfig.clientUserId.trim() !== "" ? safeConfig.clientUserId.trim() : "";
       if (sessionClientId) {
         this.bus.emit("__setContext", {
           data: { cwSessionUserId: sessionClientId },
           replace: false
         });
       }
+      const hadStoredSession = this.engine.hasRestorableSession();
+      const resumed = this.engine.resumeSession();
+      if (hadStoredSession && !resumed) {
+        console.warn("[ChatWidget] Stored session points to a missing node. Clearing persisted state.");
+        this.stateManager.clear();
+        this.engine.clearSession();
+        this.bus.emit("stateCleared");
+      }
+      if (!resumed && safeConfig.defaultFlowId) {
+        this.startFlow(safeConfig.defaultFlowId);
+      }
       const state = this.engine.getState();
       const shouldOpen = safeConfig.autoOpen || state.isOpen;
       if (shouldOpen) {
         this.open();
-      }
-      if (safeConfig.defaultFlowId && !state.activeFlowId) {
-        this.startFlow(safeConfig.defaultFlowId);
       }
       this.flushPendingCalls();
       this.bus.emit("ready");
@@ -4585,10 +4883,16 @@ class ChatWidgetImpl {
     this.guardInitialized();
     return this.engine.getState();
   }
+  getOrCreateVisitorId(storageKey) {
+    return getOrCreateVisitorId(storageKey);
+  }
+  peekVisitorId(storageKey) {
+    return peekVisitorId(storageKey);
+  }
   clearState() {
     this.enqueueOrRun(() => {
       this.stateManager.clear();
-      this.resetFlow();
+      this.engine.clearSession();
       this.bus.emit("stateCleared");
     });
   }
@@ -4605,7 +4909,8 @@ class ChatWidgetImpl {
     this.destroyed = true;
     this.embedChromeVisible = true;
     (_a = this.ui) == null ? void 0 : _a.unmount();
-    (_b = this.stateManager) == null ? void 0 : _b.clear();
+    (_b = this.transcriptRecorder) == null ? void 0 : _b.destroy();
+    this.transcriptRecorder = void 0;
     this.bus.clear();
     this.isInitialized = false;
     if (typeof window !== "undefined") {
@@ -4618,5 +4923,7 @@ if (typeof window !== "undefined") {
   window.ChatWidget = widget;
 }
 export {
-  widget as default
+  widget as default,
+  getOrCreateVisitorId,
+  peekVisitorId
 };
