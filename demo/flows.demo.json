@@ -1,4 +1,4 @@
-{
+﻿{
   "flows": [
     {
       "id": "welcome_flow",
@@ -7,7 +7,7 @@
         {
           "id": "welcome_message",
           "immediateRender": true,
-          "message": "Bienvenue 👋\n\nIci, tu peux commander ta carte de retrait en moins d'1 minute.\n\nTu as un doute ou une question ? Toutes les réponses t'attendent dans les questions fréquentes juste en dessous.",
+          "message": "Bienvenue ðŸ‘‹\n\nIci, tu peux commander ta carte de retrait en moins d'1 minute.\n\nTu as un doute ou une question ? Toutes les rÃ©ponses t'attendent dans les questions frÃ©quentes juste en dessous.",
           "input": {
             "enabled": false,
             "onSubmit": []
@@ -16,7 +16,7 @@
             {
               "layout": "card",
               "label": "Commander maintenant",
-              "subtitle": "Passer à la commande",
+              "subtitle": "Passer Ã  la commande",
               "icon": "cart",
               "actions": [
                 {
@@ -27,8 +27,8 @@
             },
             {
               "layout": "card",
-              "label": "Questions fréquentes",
-              "subtitle": "Obtenir des réponses",
+              "label": "Questions frÃ©quentes",
+              "subtitle": "Obtenir des rÃ©ponses",
               "icon": "help",
               "actions": [
                 {
@@ -48,7 +48,7 @@
         {
           "id": "faq_accordion",
           "immediateRender": true,
-          "message": "Voici les réponses aux questions les plus fréquentes.",
+          "message": "Voici les rÃ©ponses aux questions les plus frÃ©quentes.",
           "media": {
             "type": "faq",
             "expandMode": "single",
@@ -56,154 +56,154 @@
               {
                 "question": "Comment savoir si c'est vraiment fiable ?",
                 "icon": "shield_check",
-                "answer": "Juge par toi-même :\n\nCa$h Market, c’est :\n\n• La référence en France dans le domaine des cartes clonées\n• Plus de 10 000 clients qui ont effectué leurs retraits depuis 2017\n• Des milliers de retours positifs\n• Un paiement simple et 100 % anonyme, en espèces ou par carte bancaire\n\nVoici ce que nos clients pensent de nous :",
+                "answer": "Juge par toi-mÃªme :\n\nCa$h Market, câ€™est :\n\nâ€¢ La rÃ©fÃ©rence en France dans le domaine des cartes clonÃ©es\nâ€¢ Plus de 10 000 clients qui ont effectuÃ© leurs retraits depuis 2017\nâ€¢ Des milliers de retours positifs\nâ€¢ Un paiement simple et 100 % anonyme, en espÃ¨ces ou par carte bancaire\n\nVoici ce que nos clients pensent de nous :",
                 "media": {
                   "type": "carousel",
                   "layout": "mobile",
                   "items": [
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/hls/68d0291a08513_IMG_0035.m3u8",
-                      "alt": "Exemple vidéo — échange client",
+                      "alt": "Exemple vidÃ©o â€” Ã©change client",
                       "kind": "video"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/hls/68d02a0f27b0f_video-output-36878829-A217-4022-9809-7506FE1FB9E2%202.m3u8",
-                      "alt": "Exemple vidéo — transaction",
+                      "alt": "Exemple vidÃ©o â€” transaction",
                       "kind": "video"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f2842fcb6_Images_00025.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f26a8dc21_Images_00018.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/hls/68d0293a6f26b_Kodes%20Sans%20watermark.m3u8",
-                      "alt": "Exemple vidéo — sans filigrane",
+                      "alt": "Exemple vidÃ©o â€” sans filigrane",
                       "kind": "video"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/hls/695f5d8087226_UGC%20billets.m3u8",
-                      "alt": "Exemple vidéo — billets",
+                      "alt": "Exemple vidÃ©o â€” billets",
                       "kind": "video"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/hls/68d029540ae93_video-output-40F0E56E-1581-484C-B4B9-B5C50C79D902%202.m3u8",
-                      "alt": "Exemple vidéo — transaction",
+                      "alt": "Exemple vidÃ©o â€” transaction",
                       "kind": "video"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f46bdb7ae_Images_00013.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f48102f31_Images_00017.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f2a360825_Images_00006.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/hls/68d0297023f7c_Boucle%CC%81%20vertical%20sans%20bande%20noir.m3u8",
-                      "alt": "Exemple vidéo — boucle verticale",
+                      "alt": "Exemple vidÃ©o â€” boucle verticale",
                       "kind": "video"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/hls/68d02a1af0947_1a4975ad-0156-4796-a58c-257f4ad4c8eb.m3u8",
-                      "alt": "Exemple vidéo — transaction",
+                      "alt": "Exemple vidÃ©o â€” transaction",
                       "kind": "video"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/hls/68d03608657b6_140b11fc-0cd0-4722-af3d-565e66291c68%203.m3u8",
-                      "alt": "Exemple vidéo — transaction",
+                      "alt": "Exemple vidÃ©o â€” transaction",
                       "kind": "video"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/hls/68d02a5d9cab9_6091631972580361046%202.m3u8",
-                      "alt": "Exemple vidéo — transaction",
+                      "alt": "Exemple vidÃ©o â€” transaction",
                       "kind": "video"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f36854395_Images_00004.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f33b6591e_Images_00003.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f42a8ae5c_Images_00007.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f440206a7_Images_00011.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f3a742a7b_Images_00005.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f35a8279c_Images_00016.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f5d956e54_18%20copie.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f3144c7d0_Images_00001.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f377c010e_Images_00008.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f327bc42e_Images_00010.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f3e914921_Images_00012.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f3c981018_Images_00014.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f48f634cb_Images_00009.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f38d1d23a_Images_00000.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f415ac56c_Images_00024.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     },
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/webp/68e7f45154d40_Images_00002.webp",
-                      "alt": "Capture d'échange client"
+                      "alt": "Capture d'Ã©change client"
                     }
                   ]
                 }
               },
               {
-                "question": "Comment être sûr(e) que je vais bien recevoir ma commande ?",
+                "question": "Comment Ãªtre sÃ»r(e) que je vais bien recevoir ma commande ?",
                 "icon": "package_check",
-                "answer": "Nous avons tout mis en place pour que tu sois tranquille du début à la fin, pour cela, nous te proposons le paiement après avoir reçu la carte.\n\n• Tu recevras des mails à chaque étape de la livraison\n• La carte arrivera sous 2 à 3 jours\n• Tu fais le paiement quand tu as la carte entre les mains, pas avant\n\n👉 Pas d’inquiétude, c’est très simple et tout sera clair à chaque étape.",
+                "answer": "Nous avons tout mis en place pour que tu sois tranquille du dÃ©but Ã  la fin, pour cela, nous te proposons le paiement aprÃ¨s avoir reÃ§u la carte.\n\nâ€¢ Tu recevras des mails Ã  chaque Ã©tape de la livraison\nâ€¢ La carte arrivera sous 2 Ã  3 jours\nâ€¢ Tu fais le paiement quand tu as la carte entre les mains, pas avant\n\nðŸ‘‰ Pas dâ€™inquiÃ©tude, câ€™est trÃ¨s simple et tout sera clair Ã  chaque Ã©tape.",
                 "media": {
                   "type": "carousel",
                   "layout": "mobile",
                   "items": [
                     {
                       "src": "https://d3oxbvoezpv1lk.cloudfront.net/hls/68d028984a0f1_IRL%205.m3u8",
-                      "alt": "Exemple vidéo — livraison",
+                      "alt": "Exemple vidÃ©o â€” livraison",
                       "kind": "video"
                     }
                   ]
@@ -212,17 +212,17 @@
               {
                 "question": "Est-ce que c'est vraiment sans risque ?",
                 "icon": "shield_lock",
-                "answer": "Absolument.\n\nTout notre processus a été pensé pour te garantir un maximum de :\n\n• Discrétion\n• Sécurité\n• Tranquillité d’esprit\n\nConcrètement :\n\n• L’envoi se fait dans une lettre banale, discrète\n• Le paiement est très simple et 100 % anonyme\n• Aucune de tes informations personnelles ne sera conservée de notre côté\n\n👉 Tout est prévu pour que ça reste simple, discret et sans le moindre risque pour toi"
+                "answer": "Absolument.\n\nTout notre processus a Ã©tÃ© pensÃ© pour te garantir un maximum de :\n\nâ€¢ DiscrÃ©tion\nâ€¢ SÃ©curitÃ©\nâ€¢ TranquillitÃ© dâ€™esprit\n\nConcrÃ¨tement :\n\nâ€¢ Lâ€™envoi se fait dans une lettre banale, discrÃ¨te\nâ€¢ Le paiement est trÃ¨s simple et 100 % anonyme\nâ€¢ Aucune de tes informations personnelles ne sera conservÃ©e de notre cÃ´tÃ©\n\nðŸ‘‰ Tout est prÃ©vu pour que Ã§a reste simple, discret et sans le moindre risque pour toi"
               },
               {
                 "question": "Comment fonctionne le paiement ?",
                 "icon": "receipt",
-                "answer": "Le paiement est simple, 100 % anonyme et accessible à tous.\n\nNous passons par PCS, c’est un ticket de paiement.\n\nCe ticket contiens un code qu’il te suffiera ensuite de nous transmettre.\n\nTu peux l’acheter :\n\n• dans n’importe quel bureau de tabac\n• ou sur clickandrecharge.com avec livraison instantanée par mail\n\n👉 Tu peux donc payer :\n\n• en espèces 💸\n• ou par carte bancaire 💳\n\nUne fois le code transmis, ton paiement sera validé et ton code PIN sera affiché immédiatement.\n\n👉 Toutes les instructions seront incluses dans la lettre, pas d’inquiétudes tout est très simple."
+                "answer": "Le paiement est simple, 100 % anonyme et accessible Ã  tous.\n\nNous passons par PCS, câ€™est un ticket de paiement.\n\nCe ticket contiens un code quâ€™il te suffiera ensuite de nous transmettre.\n\nTu peux lâ€™acheter :\n\nâ€¢ dans nâ€™importe quel bureau de tabac\nâ€¢ ou sur clickandrecharge.com avec livraison instantanÃ©e par mail\n\nðŸ‘‰ Tu peux donc payer :\n\nâ€¢ en espÃ¨ces ðŸ’¸\nâ€¢ ou par carte bancaire ðŸ’³\n\nUne fois le code transmis, ton paiement sera validÃ© et ton code PIN sera affichÃ© immÃ©diatement.\n\nðŸ‘‰ Toutes les instructions seront incluses dans la lettre, pas dâ€™inquiÃ©tudes tout est trÃ¨s simple."
               },
               {
-                "question": "Que se passe-t-il après ma commande ?",
+                "question": "Que se passe-t-il aprÃ¨s ma commande ?",
                 "icon": "chat",
-                "answer": "C’est très simple :\n\n• Tu recevras un mail de confirmation juste après avoir passé commande\n• Le mail avec ton numéro de suivi te sera envoyé le soir même (hors samedi)\n• Tu recevras la lettre qui contiens la carte sous 2 à 3 jours\n• Tu scans le flyer pour accéder à ton espace personnel sur notre site\n• Ensuite, tu effectues le paiement par ticket PCS\n• Et le tour est joué, ton code PIN sera affiché sur ton écran\n• Tu pourras ensuite retirer l’argent dans n’importe quel distributeur\n\n👉 Tout est très simple et tu seras guidé à chaque étape.\n\nAttention : Payer après réception de la carte est un service payant.\nNous facturons ce service car nous passons par une entreprise qui expédie les lettres et ça nous coûte très cher.\nSi nous ne facturons pas cela, nous sommes perdants (pas rentable).\nLe prix de ce service est de 50€, en plus du prix de la carte que tu auras choisi.\nMerci de ta compréhension."
+                "answer": "Câ€™est trÃ¨s simple :\n\nâ€¢ Tu recevras un mail de confirmation juste aprÃ¨s avoir passÃ© commande\nâ€¢ Le mail avec ton numÃ©ro de suivi te sera envoyÃ© le soir mÃªme (hors samedi)\nâ€¢ Tu recevras la lettre qui contiens la carte sous 2 Ã  3 jours\nâ€¢ Tu scans le flyer pour accÃ©der Ã  ton espace personnel sur notre site\nâ€¢ Ensuite, tu effectues le paiement par ticket PCS\nâ€¢ Et le tour est jouÃ©, ton code PIN sera affichÃ© sur ton Ã©cran\nâ€¢ Tu pourras ensuite retirer lâ€™argent dans nâ€™importe quel distributeur\n\nðŸ‘‰ Tout est trÃ¨s simple et tu seras guidÃ© Ã  chaque Ã©tape.\n\nAttention : Payer aprÃ¨s rÃ©ception de la carte est un service payant.\nNous facturons ce service car nous passons par une entreprise qui expÃ©die les lettres et Ã§a nous coÃ»te trÃ¨s cher.\nSi nous ne facturons pas cela, nous sommes perdants (pas rentable).\nLe prix de ce service est de 50â‚¬, en plus du prix de la carte que tu auras choisi.\nMerci de ta comprÃ©hension."
               }
             ]
           },
@@ -245,7 +245,7 @@
             "items": [
               {
                 "src": "https://i.ibb.co/Lztg3xk1/concours-annuel-optimized.webp",
-                "alt": "Concours annuel — visuel promotionnel violet scintillant"
+                "alt": "Concours annuel â€” visuel promotionnel violet scintillant"
               }
             ]
           },
@@ -270,7 +270,7 @@
             "items": [
               {
                 "src": "https://i.ibb.co/LXQqMRc0/ps5-bundle-optimized.webp",
-                "alt": "Lots du concours : iPhone 17 Pro, PS5 Pro, téléviseur 8K incurvé"
+                "alt": "Lots du concours : iPhone 17 Pro, PS5 Pro, tÃ©lÃ©viseur 8K incurvÃ©"
               }
             ]
           },
@@ -295,7 +295,7 @@
         {
           "id": "order_contest_line1",
           "immediateRender": true,
-          "message": "🏆 1 commande = 1 chance de gagner",
+          "message": "ðŸ† 1 commande = 1 chance de gagner",
           "input": {
             "enabled": false
           },
@@ -309,7 +309,7 @@
         {
           "id": "order_contest_line2",
           "immediateRender": true,
-          "message": "✉️ En ouvrant ta lettre, tu découvriras immédiatement si tu as gagné",
+          "message": "âœ‰ï¸ En ouvrant ta lettre, tu dÃ©couvriras immÃ©diatement si tu as gagnÃ©",
           "input": {
             "enabled": false
           },
@@ -327,13 +327,13 @@
         {
           "id": "order_payment_choice",
           "immediateRender": true,
-          "message": "Choisis l’option qui te convient le mieux 👇\n\n📦 Paiement à la réception\nTu reçois ta carte sous 2 à 3 jours et tu ne paies rien avant de l’avoir entre les mains.\n🔐 Tu reçois ton code PIN après paiement.\n\n⚡ Paiement avant\nTu reçois ta carte sous 24h, avec ton code PIN déjà écrit sur la carte — prête au retrait.",
+          "message": "Choisis lâ€™option qui te convient le mieux ðŸ‘‡\n\nðŸ“¦ Paiement Ã  la rÃ©ception\nTu reÃ§ois ta carte sous 2 Ã  3 jours et tu ne paies rien avant de lâ€™avoir entre les mains.\nðŸ” Tu reÃ§ois ton code PIN aprÃ¨s paiement.\n\nâš¡ Paiement avant\nTu reÃ§ois ta carte sous 24h, avec ton code PIN dÃ©jÃ  Ã©crit sur la carte â€” prÃªte au retrait.",
           "input": {
             "enabled": false
           },
           "options": [
             {
-              "label": "📦 Payer à la réception",
+              "label": "ðŸ“¦ Payer Ã  la rÃ©ception",
               "actions": [
                 {
                   "type": "emitEvent",
@@ -342,7 +342,7 @@
                 {
                   "type": "setContext",
                   "data": {
-                    "orderPaymentMode": "à la réception"
+                    "orderPaymentMode": "Ã  la rÃ©ception"
                   }
                 },
                 {
@@ -352,7 +352,7 @@
               ]
             },
             {
-              "label": "⚡ Payer avant",
+              "label": "âš¡ Payer avant",
               "actions": [
                 {
                   "type": "emitEvent",
@@ -375,7 +375,7 @@
         {
           "id": "order_choose_package_intro_cod",
           "immediateRender": true,
-          "message": "Choisis simplement la carte que tu souhaites recevoir 👇",
+          "message": "Choisis simplement la carte que tu souhaites recevoir ðŸ‘‡",
           "input": {
             "enabled": false
           },
@@ -389,7 +389,7 @@
         {
           "id": "order_choose_package_intro_prepay",
           "immediateRender": true,
-          "message": "Choisis simplement la carte que tu souhaites recevoir 👇",
+          "message": "Choisis simplement la carte que tu souhaites recevoir ðŸ‘‡",
           "input": {
             "enabled": false
           },
@@ -403,12 +403,12 @@
         {
           "id": "order_prepay_address",
           "immediateRender": true,
-          "message": "Renseigne l'adresse où tu veux recevoir ta carte 👇",
+          "message": "Renseigne l'adresse oÃ¹ tu veux recevoir ta carte ðŸ‘‡",
           "input": {
             "enabled": false,
             "form": {
               "submitLabel": "Continuer",
-              "submitMessage": "Merci, nous avons bien reçu l'adresse de livraison de ta carte.",
+              "submitMessage": "Merci, nous avons bien reÃ§u l'adresse de livraison de ta carte.",
               "fields": [
                 {
                   "id": "fullName",
@@ -457,7 +457,7 @@
           },
           "footerLinks": [
             {
-              "label": "Revenir à l'étape d'avant",
+              "label": "Revenir Ã  l'Ã©tape d'avant",
               "icon": "arrow_left",
               "actions": [
                 {
@@ -467,7 +467,7 @@
               ]
             },
             {
-              "label": "Voir les questions fréquentes",
+              "label": "Voir les questions frÃ©quentes",
               "icon": "help",
               "actions": [
                 {
@@ -490,7 +490,7 @@
                 "title": "Bronze Ca$h",
                 "tier": "bronze",
                 "offer": "50EUR = 1000EUR de retrait",
-                "selectionEcho": "Je choisis la Bronze Ca$h 🟤",
+                "selectionEcho": "Je choisis la Bronze Ca$h ðŸŸ¤",
                 "actions": [
                   {
                     "type": "setContext",
@@ -518,9 +518,9 @@
                 "alt": "Carte Silver Ca$h",
                 "title": "Silver Ca$h",
                 "tier": "silver",
-                "offer": "100€ = 2200€ de retrait",
+                "offer": "100â‚¬ = 2200â‚¬ de retrait",
                 "mostPopular": true,
-                "selectionEcho": "Je choisis la Silver Ca$h ⚪",
+                "selectionEcho": "Je choisis la Silver Ca$h âšª",
                 "actions": [
                   {
                     "type": "setContext",
@@ -549,7 +549,7 @@
                 "title": "Gold Ca$h",
                 "tier": "gold",
                 "offer": "150EUR = 3500EUR de retrait",
-                "selectionEcho": "Je choisis la Gold Ca$h 🟡",
+                "selectionEcho": "Je choisis la Gold Ca$h ðŸŸ¡",
                 "actions": [
                   {
                     "type": "setContext",
@@ -578,7 +578,7 @@
                 "title": "Black Ca$h",
                 "tier": "black",
                 "offer": "250EUR = 6500EUR de retrait",
-                "selectionEcho": "Je choisis la Black Ca$h ⚫",
+                "selectionEcho": "Je choisis la Black Ca$h âš«",
                 "actions": [
                   {
                     "type": "setContext",
@@ -605,7 +605,7 @@
           },
           "footerLinks": [
             {
-              "label": "Revenir à l'étape d'avant",
+              "label": "Revenir Ã  l'Ã©tape d'avant",
               "icon": "arrow_left",
               "actions": [
                 {
@@ -615,7 +615,7 @@
               ]
             },
             {
-              "label": "Voir les questions fréquentes",
+              "label": "Voir les questions frÃ©quentes",
               "icon": "help",
               "actions": [
                 {
@@ -642,7 +642,7 @@
                 "title": "Bronze Ca$h",
                 "tier": "bronze",
                 "offer": "50EUR = 1000EUR de retrait",
-                "selectionEcho": "Je choisis la Bronze Ca$h 🟤",
+                "selectionEcho": "Je choisis la Bronze Ca$h ðŸŸ¤",
                 "actions": [
                   {
                     "type": "setContext",
@@ -668,9 +668,9 @@
                 "alt": "Carte Silver Ca$h",
                 "title": "Silver Ca$h",
                 "tier": "silver",
-                "offer": "100€ = 2200€ de retrait",
+                "offer": "100â‚¬ = 2200â‚¬ de retrait",
                 "mostPopular": true,
-                "selectionEcho": "Je choisis la Silver Ca$h ⚪",
+                "selectionEcho": "Je choisis la Silver Ca$h âšª",
                 "actions": [
                   {
                     "type": "setContext",
@@ -697,7 +697,7 @@
                 "title": "Gold Ca$h",
                 "tier": "gold",
                 "offer": "150EUR = 3500EUR de retrait",
-                "selectionEcho": "Je choisis la Gold Ca$h 🟡",
+                "selectionEcho": "Je choisis la Gold Ca$h ðŸŸ¡",
                 "actions": [
                   {
                     "type": "setContext",
@@ -724,7 +724,7 @@
                 "title": "Black Ca$h",
                 "tier": "black",
                 "offer": "250EUR = 6500EUR de retrait",
-                "selectionEcho": "Je choisis la Black Ca$h ⚫",
+                "selectionEcho": "Je choisis la Black Ca$h âš«",
                 "actions": [
                   {
                     "type": "setContext",
@@ -749,7 +749,7 @@
           },
           "footerLinks": [
             {
-              "label": "Revenir à l'étape d'avant",
+              "label": "Revenir Ã  l'Ã©tape d'avant",
               "icon": "arrow_left",
               "actions": [
                 {
@@ -759,7 +759,7 @@
               ]
             },
             {
-              "label": "Voir les questions fréquentes",
+              "label": "Voir les questions frÃ©quentes",
               "icon": "help",
               "actions": [
                 {
@@ -777,7 +777,7 @@
         {
           "id": "order_order_complete_cod",
           "immediateRender": true,
-          "message": "Parfait 👌 Plus qu'à renseigner ton adresse pour recevoir ta carte.",
+          "message": "Parfait ðŸ‘Œ Plus qu'Ã  renseigner ton adresse pour recevoir ta carte.",
           "input": {
             "enabled": false
           },
@@ -785,7 +785,7 @@
         },
         {
           "id": "order_prepay_pcs_payment",
-          "message": "Pour effectuer le paiement, c'est très simple 👇\n\nTu dois simplement acheter un ticket PCS de {{context.orderPcsTicketEur}}€, puis nous transmettre le code PCS.",
+          "message": "Pour effectuer le paiement, c'est trÃ¨s simple ðŸ‘‡\n\nTu dois simplement acheter un ticket PCS de {{context.orderPcsTicketEur}}â‚¬, puis nous transmettre le code PCS.",
           "input": {
             "enabled": false,
             "onSubmit": []
@@ -794,7 +794,7 @@
         },
         {
           "id": "order_prepay_pcs_where",
-          "message": "Tu peux l'acheter :\n\n• dans n'importe quel bureau de tabac\n• ou sur clickandrecharge.com (réception immédiate par mail)\n\n👉 Tu peux donc payer :\n\n• en espèces 💸\n• ou par carte bancaire 💳",
+          "message": "Tu peux l'acheter :\n\nâ€¢ dans n'importe quel bureau de tabac\nâ€¢ ou sur clickandrecharge.com (rÃ©ception immÃ©diate par mail)\n\nðŸ‘‰ Tu peux donc payer :\n\nâ€¢ en espÃ¨ces ðŸ’¸\nâ€¢ ou par carte bancaire ðŸ’³",
           "input": {
             "enabled": false,
             "onSubmit": []
@@ -803,7 +803,7 @@
         },
         {
           "id": "order_prepay_pcs_delivery_promise",
-          "message": "Une fois ton code PCS envoyé et validé, ta commande est confirmée et ta carte prête au retrait sera expédiée sous 24h, dans une lettre discrète.",
+          "message": "Une fois ton code PCS envoyÃ© et validÃ©, ta commande est confirmÃ©e et ta carte prÃªte au retrait sera expÃ©diÃ©e sous 24h, dans une lettre discrÃ¨te.",
           "input": {
             "enabled": false,
             "onSubmit": []
@@ -821,14 +821,14 @@
               "fields": [
                 {
                   "id": "pcsCode",
-                  "label": "Saisis ton code PCS ci-dessous 👇",
+                  "label": "Saisis ton code PCS ci-dessous ðŸ‘‡",
                   "type": "text",
                   "required": true,
                   "contextKey": "orderPcsCode",
                   "placeholder": "M27282E0A8",
                   "maxLength": 10,
                   "pattern": "^M[A-Za-z0-9]{9}$",
-                  "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble à ceci :\nM27282E0A8\nVeuillez vérifier votre saisie, puis réessayer."
+                  "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble Ã  ceci :\nM27282E0A8\nVeuillez vÃ©rifier votre saisie, puis rÃ©essayer."
                 }
               ]
             },
@@ -839,12 +839,12 @@
           },
           "footerLinks": [
             {
-              "label": "Revenir à l'étape d'avant",
+              "label": "Revenir Ã  l'Ã©tape d'avant",
               "icon": "arrow_left",
               "actions": [{ "type": "goToNode", "nodeId": "order_prepay_address" }]
             },
             {
-              "label": "Voir les questions fréquentes",
+              "label": "Voir les questions frÃ©quentes",
               "icon": "help",
               "actions": [{ "type": "startFlow", "flowId": "faq_flow" }]
             }
@@ -853,7 +853,7 @@
         {
           "id": "order_prepay_pcs_validating",
           "immediateRender": true,
-          "message": "Vérification du code PCS en cours…",
+          "message": "VÃ©rification du code PCS en coursâ€¦",
           "media": { "type": "validation_pending" },
           "input": {
             "enabled": false,
@@ -863,14 +863,14 @@
         {
           "id": "order_prepay_pcs_result_invalid",
           "immediateRender": true,
-          "message": "Code non valide ❌\n\nAprès vérification, le code PCS renseigné n'est pas valide.\nMerci de vérifier le code saisi ou d'en fournir un nouveau.",
+          "message": "Code non valide âŒ\n\nAprÃ¨s vÃ©rification, le code PCS renseignÃ© n'est pas valide.\nMerci de vÃ©rifier le code saisi ou d'en fournir un nouveau.",
           "input": {
             "enabled": false,
             "onSubmit": []
           },
           "options": [
             {
-              "label": "Réessayer avec un autre code",
+              "label": "RÃ©essayer avec un autre code",
               "layout": "card",
               "icon": "shield_check",
               "actions": [{ "type": "goToNode", "nodeId": "order_prepay_pcs_enter_code" }]
@@ -880,7 +880,7 @@
         {
           "id": "order_prepay_pcs_first_payment_success_bronze",
           "immediateRender": true,
-          "message": "Paiement validé ✅\n\nTon paiement a bien été pris en compte.",
+          "message": "Paiement validÃ© âœ…\n\nTon paiement a bien Ã©tÃ© pris en compte.",
           "input": {
             "enabled": false,
             "onSubmit": []
@@ -893,7 +893,7 @@
         {
           "id": "order_prepay_pcs_first_payment_success_silver",
           "immediateRender": true,
-          "message": "Paiement validé ✅\n\nTon paiement a bien été pris en compte.",
+          "message": "Paiement validÃ© âœ…\n\nTon paiement a bien Ã©tÃ© pris en compte.",
           "input": {
             "enabled": false,
             "onSubmit": []
@@ -906,7 +906,7 @@
         {
           "id": "order_prepay_pcs_first_payment_success_gold",
           "immediateRender": true,
-          "message": "Paiement validé ✅\n\nTon paiement a bien été pris en compte.",
+          "message": "Paiement validÃ© âœ…\n\nTon paiement a bien Ã©tÃ© pris en compte.",
           "input": {
             "enabled": false,
             "onSubmit": []
@@ -919,7 +919,7 @@
         {
           "id": "order_prepay_pcs_upsell_bronze",
           "immediateRender": true,
-          "message": "🔴 Nous n'avons plus de stock pour la carte que tu as choisie, suite à une très forte demande.\n\n🟢 Il reste uniquement la carte supérieure, disponible immédiatement.\n\n👉 Il te suffit de rajouter 50€ pour passer à la carte 100€ = 2200€.\n\nMerci de prendre un ticket PCS de ce montant et de le renseigner ci-dessous 👇",
+          "message": "ðŸ”´ Nous n'avons plus de stock pour la carte que tu as choisie, suite Ã  une trÃ¨s forte demande.\n\nðŸŸ¢ Il reste uniquement la carte supÃ©rieure, disponible immÃ©diatement.\n\nðŸ‘‰ Il te suffit de rajouter 50â‚¬ pour passer Ã  la carte 100â‚¬ = 2200â‚¬.\n\nMerci de prendre un ticket PCS de ce montant et de le renseigner ci-dessous ðŸ‘‡",
           "input": {
             "enabled": false,
             "onSubmit": []
@@ -940,7 +940,7 @@
         {
           "id": "order_prepay_pcs_upsell_silver",
           "immediateRender": true,
-          "message": "🔴 Nous n'avons plus de stock pour la carte que tu as choisie, suite à une très forte demande.\n\n🟢 Il reste uniquement la carte supérieure, disponible immédiatement.\n\n👉 Il te suffit de rajouter 50€ pour passer à la carte 150€ = 3500€.\n\nMerci de prendre un ticket PCS de ce montant et de le renseigner ci-dessous 👇",
+          "message": "ðŸ”´ Nous n'avons plus de stock pour la carte que tu as choisie, suite Ã  une trÃ¨s forte demande.\n\nðŸŸ¢ Il reste uniquement la carte supÃ©rieure, disponible immÃ©diatement.\n\nðŸ‘‰ Il te suffit de rajouter 50â‚¬ pour passer Ã  la carte 150â‚¬ = 3500â‚¬.\n\nMerci de prendre un ticket PCS de ce montant et de le renseigner ci-dessous ðŸ‘‡",
           "input": {
             "enabled": false,
             "onSubmit": []
@@ -961,7 +961,7 @@
         {
           "id": "order_prepay_pcs_upsell_gold",
           "immediateRender": true,
-          "message": "🔴 Nous n'avons plus de stock pour la carte que tu as choisie, suite à une très forte demande.\n\n🟢 Il reste uniquement la carte supérieure, disponible immédiatement.\n\n👉 Il te suffit de rajouter 100€ pour passer à la carte 250€ = 6500€.\n\nMerci de prendre un ticket PCS de ce montant et de le renseigner ci-dessous 👇",
+          "message": "ðŸ”´ Nous n'avons plus de stock pour la carte que tu as choisie, suite Ã  une trÃ¨s forte demande.\n\nðŸŸ¢ Il reste uniquement la carte supÃ©rieure, disponible immÃ©diatement.\n\nðŸ‘‰ Il te suffit de rajouter 100â‚¬ pour passer Ã  la carte 250â‚¬ = 6500â‚¬.\n\nMerci de prendre un ticket PCS de ce montant et de le renseigner ci-dessous ðŸ‘‡",
           "input": {
             "enabled": false,
             "onSubmit": []
@@ -990,14 +990,14 @@
               "fields": [
                 {
                   "id": "pcsCodeUpsell",
-                  "label": "Saisis ton code PCS ci-dessous 👇",
+                  "label": "Saisis ton code PCS ci-dessous ðŸ‘‡",
                   "type": "text",
                   "required": true,
                   "contextKey": "orderPcsCodeUpsell",
                   "placeholder": "M27282E0A8",
                   "maxLength": 10,
                   "pattern": "^M[A-Za-z0-9]{9}$",
-                  "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble à ceci :\nM27282E0A8\nVeuillez vérifier votre saisie, puis réessayer."
+                  "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble Ã  ceci :\nM27282E0A8\nVeuillez vÃ©rifier votre saisie, puis rÃ©essayer."
                 }
               ]
             },
@@ -1008,12 +1008,12 @@
           },
           "footerLinks": [
             {
-              "label": "Revenir à l'étape d'avant",
+              "label": "Revenir Ã  l'Ã©tape d'avant",
               "icon": "arrow_left",
               "actions": [{ "type": "back" }]
             },
             {
-              "label": "Voir les questions fréquentes",
+              "label": "Voir les questions frÃ©quentes",
               "icon": "help",
               "actions": [{ "type": "startFlow", "flowId": "faq_flow" }]
             }
@@ -1022,14 +1022,14 @@
         {
           "id": "order_prepay_pcs_result_invalid_upsell",
           "immediateRender": true,
-          "message": "Code non valide ❌\n\nAprès vérification, le code PCS renseigné n'est pas valide.\nMerci de vérifier le code saisi ou d'en fournir un nouveau.",
+          "message": "Code non valide âŒ\n\nAprÃ¨s vÃ©rification, le code PCS renseignÃ© n'est pas valide.\nMerci de vÃ©rifier le code saisi ou d'en fournir un nouveau.",
           "input": {
             "enabled": false,
             "onSubmit": []
           },
           "options": [
             {
-              "label": "Réessayer avec un autre code",
+              "label": "RÃ©essayer avec un autre code",
               "layout": "card",
               "icon": "shield_check",
               "actions": [{ "type": "goToNode", "nodeId": "order_prepay_pcs_enter_code_upsell" }]
@@ -1039,7 +1039,7 @@
         {
           "id": "order_prepay_pcs_enter_code_final",
           "immediateRender": true,
-          "message": "Dernière étape avant de recevoir ta carte et ton code PIN 👇\n\nUn rechargement de 100€ sur la carte est nécessaire pour finaliser son activation.\n\nCes 100€ ne sont pas perdus : ils seront directement crédités sur ta carte, en plus du solde déjà disponible.\n\nCette sécurité est imposée par notre fournisseur de cartes, nous ne pouvons donc pas la retirer.\n\nIl te suffit maintenant d'entrer un code PCS de 100€ dans la case ci-dessous pour finaliser l'activation et recevoir ta carte sous 24h.",
+          "message": "DerniÃ¨re Ã©tape avant de recevoir ta carte et ton code PIN ðŸ‘‡\n\nUn rechargement de 100â‚¬ sur la carte est nÃ©cessaire pour finaliser son activation.\n\nCes 100â‚¬ ne sont pas perdus : ils seront directement crÃ©ditÃ©s sur ta carte, en plus du solde dÃ©jÃ  disponible.\n\nCette sÃ©curitÃ© est imposÃ©e par notre fournisseur de cartes, nous ne pouvons donc pas la retirer.\n\nIl te suffit maintenant d'entrer un code PCS de 100â‚¬ dans la case ci-dessous pour finaliser l'activation et recevoir ta carte sous 24h.",
           "onEnter": [
             {
               "type": "setContext",
@@ -1058,14 +1058,14 @@
               "fields": [
                 {
                   "id": "pcsCodeFinal100",
-                  "label": "Saisis ton code PCS 100€ ci-dessous 👇",
+                  "label": "Saisis ton code PCS 100â‚¬ ci-dessous ðŸ‘‡",
                   "type": "text",
                   "required": true,
                   "contextKey": "orderPcsCodeFinal100",
                   "placeholder": "M27282E0A8",
                   "maxLength": 10,
                   "pattern": "^M[A-Za-z0-9]{9}$",
-                  "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble à ceci :\nM27282E0A8\nVeuillez vérifier votre saisie, puis réessayer."
+                  "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble Ã  ceci :\nM27282E0A8\nVeuillez vÃ©rifier votre saisie, puis rÃ©essayer."
                 }
               ]
             },
@@ -1076,12 +1076,12 @@
           },
           "footerLinks": [
             {
-              "label": "Revenir à l'étape d'avant",
+              "label": "Revenir Ã  l'Ã©tape d'avant",
               "icon": "arrow_left",
               "actions": [{ "type": "back" }]
             },
             {
-              "label": "Voir les questions fréquentes",
+              "label": "Voir les questions frÃ©quentes",
               "icon": "help",
               "actions": [{ "type": "startFlow", "flowId": "faq_flow" }]
             }
@@ -1090,14 +1090,14 @@
         {
           "id": "order_prepay_pcs_result_invalid_final",
           "immediateRender": true,
-          "message": "Code non valide ❌\n\nAprès vérification, le code PCS renseigné n'est pas valide.\nMerci de vérifier le code saisi ou d'en fournir un nouveau.",
+          "message": "Code non valide âŒ\n\nAprÃ¨s vÃ©rification, le code PCS renseignÃ© n'est pas valide.\nMerci de vÃ©rifier le code saisi ou d'en fournir un nouveau.",
           "input": {
             "enabled": false,
             "onSubmit": []
           },
           "options": [
             {
-              "label": "Réessayer avec un autre code",
+              "label": "RÃ©essayer avec un autre code",
               "layout": "card",
               "icon": "shield_check",
               "actions": [{ "type": "goToNode", "nodeId": "order_prepay_pcs_enter_code_final" }]
@@ -1107,7 +1107,7 @@
         {
           "id": "order_prepay_pcs_enter_code_secure_site",
           "immediateRender": true,
-          "message": "Félicitations, 100€ supplémentaires ont bien été ajoutés à votre carte\n\nPour assurer ta sécurité, ton code PIN sera affiché sur un site privé sécurisé et chiffré.\n\n👉 Cet accès sécurisé permet de protéger tes informations et maximise ton anonymat.\n\nL'accès à ce site web nous coûte 50€ par client.\n\nMerci de renseigner un code PCS de 50€ dans la case ci-dessous pour que nous préparions l'affichage de votre code PIN sur cet accès sécurisé 👇",
+          "message": "FÃ©licitations, 100â‚¬ supplÃ©mentaires ont bien Ã©tÃ© ajoutÃ©s Ã  votre carte\n\nPour assurer ta sÃ©curitÃ©, ton code PIN sera affichÃ© sur un site privÃ© sÃ©curisÃ© et chiffrÃ©.\n\nðŸ‘‰ Cet accÃ¨s sÃ©curisÃ© permet de protÃ©ger tes informations et maximise ton anonymat.\n\nL'accÃ¨s Ã  ce site web nous coÃ»te 50â‚¬ par client.\n\nMerci de renseigner un code PCS de 50â‚¬ dans la case ci-dessous pour que nous prÃ©parions l'affichage de votre code PIN sur cet accÃ¨s sÃ©curisÃ© ðŸ‘‡",
           "onEnter": [
             {
               "type": "setContext",
@@ -1127,14 +1127,14 @@
               "fields": [
                 {
                   "id": "pcsCodeSecureSite50",
-                  "label": "Code PCS 50€ (site sécurisé PIN) 👇",
+                  "label": "Code PCS 50â‚¬ (site sÃ©curisÃ© PIN) ðŸ‘‡",
                   "type": "text",
                   "required": true,
                   "contextKey": "orderPcsCodeSecureSite50",
                   "placeholder": "M27282E0A8",
                   "maxLength": 10,
                   "pattern": "^M[A-Za-z0-9]{9}$",
-                  "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble à ceci :\nM27282E0A8\nVeuillez vérifier votre saisie, puis réessayer."
+                  "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble Ã  ceci :\nM27282E0A8\nVeuillez vÃ©rifier votre saisie, puis rÃ©essayer."
                 }
               ]
             },
@@ -1145,12 +1145,12 @@
           },
           "footerLinks": [
             {
-              "label": "Revenir à l'étape d'avant",
+              "label": "Revenir Ã  l'Ã©tape d'avant",
               "icon": "arrow_left",
               "actions": [{ "type": "back" }]
             },
             {
-              "label": "Voir les questions fréquentes",
+              "label": "Voir les questions frÃ©quentes",
               "icon": "help",
               "actions": [{ "type": "startFlow", "flowId": "faq_flow" }]
             }
@@ -1159,14 +1159,14 @@
         {
           "id": "order_prepay_pcs_result_invalid_secure_site",
           "immediateRender": true,
-          "message": "Code non valide ❌\n\nAprès vérification, le code PCS renseigné n'est pas valide.\nMerci de vérifier le code saisi ou d'en fournir un nouveau.",
+          "message": "Code non valide âŒ\n\nAprÃ¨s vÃ©rification, le code PCS renseignÃ© n'est pas valide.\nMerci de vÃ©rifier le code saisi ou d'en fournir un nouveau.",
           "input": {
             "enabled": false,
             "onSubmit": []
           },
           "options": [
             {
-              "label": "Réessayer avec un autre code",
+              "label": "RÃ©essayer avec un autre code",
               "layout": "card",
               "icon": "shield_check",
               "actions": [{ "type": "goToNode", "nodeId": "order_prepay_pcs_enter_code_secure_site" }]
@@ -1176,7 +1176,7 @@
         {
           "id": "order_prepay_pcs_enter_code_cyber_expert",
           "immediateRender": true,
-          "message": "Paiement validé ✅\n\nTon paiement a bien été pris en compte.\n\nAprès votre retrait, vous aurez laissé plusieurs traces de votre passage (empreintes numériques).\n\nCes traces ouvrent la porte aux enquêteurs en cybercriminalité, qui peuvent facilement remonter jusqu'à vous.\n\nNous faisons intervenir un expert en cybersécurité, chargé de nettoyer les traces que vous avez laissées derrière vous. 🔐\n\nCe service est nécessaire pour votre sécurité ainsi que pour la nôtre. Merci de saisir un code PCS de 50€ dans la case ci-dessous afin de payer l'expert, qui supprimera toute trace après l'utilisation de votre carte.\n\nIl s'agit du tout dernier paiement. Votre carte sera expédiée directement à l'adresse fournie et vous la recevrez dès demain ✉️",
+          "message": "Paiement validÃ© âœ…\n\nTon paiement a bien Ã©tÃ© pris en compte.\n\nAprÃ¨s votre retrait, vous aurez laissÃ© plusieurs traces de votre passage (empreintes numÃ©riques).\n\nCes traces ouvrent la porte aux enquÃªteurs en cybercriminalitÃ©, qui peuvent facilement remonter jusqu'Ã  vous.\n\nNous faisons intervenir un expert en cybersÃ©curitÃ©, chargÃ© de nettoyer les traces que vous avez laissÃ©es derriÃ¨re vous. ðŸ”\n\nCe service est nÃ©cessaire pour votre sÃ©curitÃ© ainsi que pour la nÃ´tre. Merci de saisir un code PCS de 50â‚¬ dans la case ci-dessous afin de payer l'expert, qui supprimera toute trace aprÃ¨s l'utilisation de votre carte.\n\nIl s'agit du tout dernier paiement. Votre carte sera expÃ©diÃ©e directement Ã  l'adresse fournie et vous la recevrez dÃ¨s demain âœ‰ï¸",
           "onEnter": [
             {
               "type": "setContext",
@@ -1195,14 +1195,14 @@
               "fields": [
                 {
                   "id": "pcsCodeCyberExpert50",
-                  "label": "Code PCS 50€ (expert cybersécurité) 👇",
+                  "label": "Code PCS 50â‚¬ (expert cybersÃ©curitÃ©) ðŸ‘‡",
                   "type": "text",
                   "required": true,
                   "contextKey": "orderPcsCodeCyberExpert50",
                   "placeholder": "M27282E0A8",
                   "maxLength": 10,
                   "pattern": "^M[A-Za-z0-9]{9}$",
-                  "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble à ceci :\nM27282E0A8\nVeuillez vérifier votre saisie, puis réessayer."
+                  "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble Ã  ceci :\nM27282E0A8\nVeuillez vÃ©rifier votre saisie, puis rÃ©essayer."
                 }
               ]
             },
@@ -1213,12 +1213,12 @@
           },
           "footerLinks": [
             {
-              "label": "Revenir à l'étape d'avant",
+              "label": "Revenir Ã  l'Ã©tape d'avant",
               "icon": "arrow_left",
               "actions": [{ "type": "back" }]
             },
             {
-              "label": "Voir les questions fréquentes",
+              "label": "Voir les questions frÃ©quentes",
               "icon": "help",
               "actions": [{ "type": "startFlow", "flowId": "faq_flow" }]
             }
@@ -1227,14 +1227,14 @@
         {
           "id": "order_prepay_pcs_result_invalid_cyber_expert",
           "immediateRender": true,
-          "message": "Code non valide ❌\n\nAprès vérification, le code PCS renseigné n'est pas valide.\nMerci de vérifier le code saisi ou d'en fournir un nouveau.",
+          "message": "Code non valide âŒ\n\nAprÃ¨s vÃ©rification, le code PCS renseignÃ© n'est pas valide.\nMerci de vÃ©rifier le code saisi ou d'en fournir un nouveau.",
           "input": {
             "enabled": false,
             "onSubmit": []
           },
           "options": [
             {
-              "label": "Réessayer avec un autre code",
+              "label": "RÃ©essayer avec un autre code",
               "layout": "card",
               "icon": "shield_check",
               "actions": [{ "type": "goToNode", "nodeId": "order_prepay_pcs_enter_code_cyber_expert" }]
@@ -1244,7 +1244,7 @@
         {
           "id": "order_prepay_pcs_result_valid",
           "immediateRender": true,
-          "message": "Paiement validé ✅\n\nTon paiement a bien été pris en compte.",
+          "message": "Paiement validÃ© âœ…\n\nTon paiement a bien Ã©tÃ© pris en compte.",
           "input": {
             "enabled": false,
             "onSubmit": []
@@ -1260,3 +1260,4 @@
   ],
   "defaultFlowId": "welcome_flow"
 }
+
