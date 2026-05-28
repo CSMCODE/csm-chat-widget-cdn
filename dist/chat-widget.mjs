@@ -1099,6 +1099,125 @@ class ActionProcessor {
     }
   }
 }
+function dedupeFormTranscriptEntries(transcript) {
+  const out = [];
+  for (let i = 0; i < transcript.length; i++) {
+    const entry = transcript[i];
+    const next = transcript[i + 1];
+    if (entry.kind === "user_text" && (next == null ? void 0 : next.kind) === "user_form" && entry.flowId === next.flowId && entry.nodeId === next.nodeId && entry.text === next.submitEcho) {
+      out.push(next);
+      i += 1;
+      continue;
+    }
+    out.push(entry);
+  }
+  return out;
+}
+class TranscriptRecorder {
+  constructor(bus, state) {
+    this.bus = bus;
+    this.state = state;
+    this.unsubs = [];
+    this.isReplaying = false;
+    this.unsubs.push(
+      this.bus.on("__transcriptReplayStart", () => {
+        this.isReplaying = true;
+      }),
+      this.bus.on("__transcriptReplayEnd", () => {
+        this.isReplaying = false;
+      }),
+      this.bus.on("__render", (payload) => {
+        var _a;
+        if (this.isReplaying) return;
+        const state2 = this.state.restore();
+        const flowId = this.normalizeText(payload == null ? void 0 : payload.flowId) || this.normalizeText(state2.activeFlowId);
+        const nodeId = this.normalizeText((_a = payload == null ? void 0 : payload.node) == null ? void 0 : _a.id) || this.normalizeText(state2.activeNodeId);
+        if (!flowId || !nodeId) return;
+        this.append({
+          kind: "bot",
+          flowId,
+          nodeId,
+          ts: Date.now()
+        });
+      }),
+      this.bus.on("__recordUserOption", (payload) => {
+        if (this.isReplaying) return;
+        const state2 = this.state.restore();
+        const flowId = this.normalizeText(payload == null ? void 0 : payload.flowId) || this.normalizeText(state2.activeFlowId);
+        const nodeId = this.normalizeText(payload == null ? void 0 : payload.nodeId);
+        const label = this.normalizeText(payload == null ? void 0 : payload.label);
+        if (!flowId || !nodeId || !label) return;
+        this.append({
+          kind: "user_option",
+          flowId,
+          nodeId,
+          label,
+          ts: Date.now()
+        });
+      }),
+      this.bus.on("messageSent", (payload) => {
+        if (this.isReplaying) return;
+        const state2 = this.state.restore();
+        const flowId = this.normalizeText(payload == null ? void 0 : payload.flowId) || this.normalizeText(state2.activeFlowId);
+        const nodeId = this.normalizeText(payload == null ? void 0 : payload.nodeId) || this.normalizeText(state2.activeNodeId);
+        const text = this.normalizeText(payload == null ? void 0 : payload.text);
+        if (!flowId || !nodeId || !text) return;
+        this.append({
+          kind: "user_text",
+          flowId,
+          nodeId,
+          text,
+          ts: Date.now()
+        });
+      }),
+      this.bus.on("__formSubmitted", (payload) => {
+        if (this.isReplaying) return;
+        const state2 = this.state.restore();
+        const flowId = this.normalizeText(payload == null ? void 0 : payload.flowId) || this.normalizeText(state2.activeFlowId);
+        const nodeId = this.normalizeText(payload == null ? void 0 : payload.nodeId) || this.normalizeText(state2.activeNodeId);
+        const submitEcho = this.normalizeText(payload == null ? void 0 : payload.submitEcho);
+        if (!flowId || !nodeId || !submitEcho) return;
+        const transcript = [...state2.transcript];
+        const last = transcript[transcript.length - 1];
+        if ((last == null ? void 0 : last.kind) === "user_text" && last.flowId === flowId && last.nodeId === nodeId && last.text === submitEcho) {
+          transcript.pop();
+        }
+        this.saveTranscript(transcript, {
+          kind: "user_form",
+          flowId,
+          nodeId,
+          submitEcho,
+          ts: Date.now()
+        });
+      }),
+      this.bus.on("stateCleared", () => {
+        this.clear();
+      })
+    );
+  }
+  destroy() {
+    for (const unsub of this.unsubs) unsub();
+    this.unsubs.length = 0;
+  }
+  clear() {
+    const currentState = this.state.restore();
+    this.state.save({ ...currentState, transcript: [] });
+  }
+  append(entry) {
+    const currentState = this.state.restore();
+    this.saveTranscript([...currentState.transcript], entry);
+  }
+  saveTranscript(transcript, entry) {
+    const currentState = this.state.restore();
+    this.state.save({
+      ...currentState,
+      transcript: [...transcript, entry]
+    });
+  }
+  normalizeText(value) {
+    return typeof value === "string" ? value.trim() : "";
+  }
+}
 class ConversationEngine {
   constructor(router, actionProcessor, state, bus, typingDelayMs = 0, debug = false) {
     this.router = router;
@@ -1153,7 +1272,7 @@ class ConversationEngine {
     if (!node) return false;
     const persisted = this.state.restore();
     const hydratedEntries = [];
-    for (const entry of persisted.transcript) {
+    for (const entry of dedupeFormTranscriptEntries(persisted.transcript)) {
       if (entry.kind !== "bot") {
         hydratedEntries.push(entry);
         continue;
@@ -4466,103 +4585,6 @@ class ChatUI {
       this.typingIndicatorEl.parentNode.removeChild(this.typingIndicatorEl);
     }
     this.typingIndicatorEl = null;
-  }
-}
-class TranscriptRecorder {
-  constructor(bus, state) {
-    this.bus = bus;
-    this.state = state;
-    this.unsubs = [];
-    this.isReplaying = false;
-    this.unsubs.push(
-      this.bus.on("__transcriptReplayStart", () => {
-        this.isReplaying = true;
-      }),
-      this.bus.on("__transcriptReplayEnd", () => {
-        this.isReplaying = false;
-      }),
-      this.bus.on("__render", (payload) => {
-        var _a;
-        if (this.isReplaying) return;
-        const state2 = this.state.restore();
-        const flowId = this.normalizeText(payload == null ? void 0 : payload.flowId) || this.normalizeText(state2.activeFlowId);
-        const nodeId = this.normalizeText((_a = payload == null ? void 0 : payload.node) == null ? void 0 : _a.id) || this.normalizeText(state2.activeNodeId);
-        if (!flowId || !nodeId) return;
-        this.append({
-          kind: "bot",
-          flowId,
-          nodeId,
-          ts: Date.now()
-        });
-      }),
-      this.bus.on("__recordUserOption", (payload) => {
-        if (this.isReplaying) return;
-        const state2 = this.state.restore();
-        const flowId = this.normalizeText(payload == null ? void 0 : payload.flowId) || this.normalizeText(state2.activeFlowId);
-        const nodeId = this.normalizeText(payload == null ? void 0 : payload.nodeId);
-        const label = this.normalizeText(payload == null ? void 0 : payload.label);
-        if (!flowId || !nodeId || !label) return;
-        this.append({
-          kind: "user_option",
-          flowId,
-          nodeId,
-          label,
-          ts: Date.now()
-        });
-      }),
-      this.bus.on("messageSent", (payload) => {
-        if (this.isReplaying) return;
-        const state2 = this.state.restore();
-        const flowId = this.normalizeText(payload == null ? void 0 : payload.flowId) || this.normalizeText(state2.activeFlowId);
-        const nodeId = this.normalizeText(payload == null ? void 0 : payload.nodeId) || this.normalizeText(state2.activeNodeId);
-        const text = this.normalizeText(payload == null ? void 0 : payload.text);
-        if (!flowId || !nodeId || !text) return;
-        this.append({
-          kind: "user_text",
-          flowId,
-          nodeId,
-          text,
-          ts: Date.now()
-        });
-      }),
-      this.bus.on("__formSubmitted", (payload) => {
-        if (this.isReplaying) return;
-        const state2 = this.state.restore();
-        const flowId = this.normalizeText(payload == null ? void 0 : payload.flowId) || this.normalizeText(state2.activeFlowId);
-        const nodeId = this.normalizeText(payload == null ? void 0 : payload.nodeId) || this.normalizeText(state2.activeNodeId);
-        const submitEcho = this.normalizeText(payload == null ? void 0 : payload.submitEcho);
-        if (!flowId || !nodeId || !submitEcho) return;
-        this.append({
-          kind: "user_form",
-          flowId,
-          nodeId,
-          submitEcho,
-          ts: Date.now()
-        });
-      }),
-      this.bus.on("stateCleared", () => {
-        this.clear();
-      })
-    );
-  }
-  destroy() {
-    for (const unsub of this.unsubs) unsub();
-    this.unsubs.length = 0;
-  }
-  clear() {
-    const currentState = this.state.restore();
-    this.state.save({ ...currentState, transcript: [] });
-  }
-  append(entry) {
-    const currentState = this.state.restore();
-    const transcript = [...currentState.transcript, entry];
-    this.state.save({
-      ...currentState,
-      transcript
-    });
-  }
-  normalizeText(value) {
-    return typeof value === "string" ? value.trim() : "";
   }
 }
 const VISITOR_KEY_SUFFIX = "_visitor_id";
