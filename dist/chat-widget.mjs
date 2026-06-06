@@ -2362,6 +2362,12 @@ const BASE_CSS = `
 
 #chat-widget-root .cw-message-text {
   margin: 0;
+  white-space: normal;
+}
+
+#chat-widget-root .cw-message-text br {
+  display: block !important;
+  visibility: visible !important;
 }
 
 #chat-widget-root .cw-media-image {
