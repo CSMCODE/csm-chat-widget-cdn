@@ -284,7 +284,7 @@ export interface ChatWidgetConfig {
      */
     readonly clientUserId?: string;
     /**
-     * HTTPS URL for the bot avatar image (header + message rows). When omitted, the bundled default PNG is used.
+     * HTTPS URL for the bot avatar image (header + message rows). When omitted, the bundled default WebP is used.
      */
     readonly brandAvatarUrl?: string;
 }

@@ -1602,7 +1602,7 @@ class ConversationEngine {
 }
 const BUNDLED_BOT_AVATAR_URL = new URL(
   /* @vite-ignore */
-  "bot-avatar.png",
+  "bot-avatar.webp",
   import.meta.url
 ).href;
 function createBotAvatarElement(avatarSrc) {
