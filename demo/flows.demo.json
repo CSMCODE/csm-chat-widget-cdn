@@ -485,7 +485,7 @@
             "type": "package_select",
             "items": [
               {
-                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/bronze.png",
+                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/bronze.webp",
                 "alt": "Carte Bronze Ca$h",
                 "title": "Bronze Ca$h",
                 "tier": "bronze",
@@ -514,7 +514,7 @@
                 ]
               },
               {
-                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/silver.png",
+                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/silver.webp",
                 "alt": "Carte Silver Ca$h",
                 "title": "Silver Ca$h",
                 "tier": "silver",
@@ -544,7 +544,7 @@
                 ]
               },
               {
-                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/gold.png",
+                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/gold.webp",
                 "alt": "Carte Gold Ca$h",
                 "title": "Gold Ca$h",
                 "tier": "gold",
@@ -573,7 +573,7 @@
                 ]
               },
               {
-                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/black.png",
+                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/black.webp",
                 "alt": "Carte Black Ca$h",
                 "title": "Black Ca$h",
                 "tier": "black",
@@ -637,7 +637,7 @@
             "type": "package_select",
             "items": [
               {
-                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/bronze.png",
+                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/bronze.webp",
                 "alt": "Carte Bronze Ca$h",
                 "title": "Bronze Ca$h",
                 "tier": "bronze",
@@ -664,7 +664,7 @@
                 ]
               },
               {
-                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/silver.png",
+                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/silver.webp",
                 "alt": "Carte Silver Ca$h",
                 "title": "Silver Ca$h",
                 "tier": "silver",
@@ -692,7 +692,7 @@
                 ]
               },
               {
-                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/gold.png",
+                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/gold.webp",
                 "alt": "Carte Gold Ca$h",
                 "title": "Gold Ca$h",
                 "tier": "gold",
@@ -719,7 +719,7 @@
                 ]
               },
               {
-                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/black.png",
+                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/black.webp",
                 "alt": "Carte Black Ca$h",
                 "title": "Black Ca$h",
                 "tier": "black",
