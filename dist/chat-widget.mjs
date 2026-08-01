@@ -4816,14 +4816,6 @@ class ChatWidgetImpl {
         this.open();
       }
       this.flushPendingCalls();
-      void import("./paymentPurchaseTracking-DGScK6T1.mjs").then(
-        (m) => m.attachPaymentPurchaseTracking(
-          this.bus,
-          () => this.getContext(),
-          () => this.engine.getState()
-        )
-      ).catch(() => {
-      });
       this.bus.emit("ready");
       if (safeConfig.debug) {
         const storageKey = (_b = safeConfig.storageKey) != null ? _b : "cw-default-store";

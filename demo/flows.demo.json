@@ -222,7 +222,7 @@
               {
                 "question": "Que se passe-t-il après ma commande ?",
                 "icon": "chat",
-                "answer": "C’est très simple :\n\n• Tu choisis ta carte et renseignes ton adresse de livraison\n• Tu paies avant l’envoi avec un ticket PCS (bureau de tabac ou clickandrecharge.com)\n• Une fois ton code PCS validé, ta commande est confirmée\n• Tu reçois un mail de confirmation, puis le suivi le soir même (hors samedi)\n• Ta carte prête au retrait — avec ton code PIN déjà écrit dessus — est expédiée sous 24h dans une lettre discrète\n• Tu pourras ensuite retirer l’argent dans n’importe quel distributeur\n\n👉 Tout est très simple et tu seras guidé à chaque étape."
+                "answer": "C’est très simple :\n\n• Tu recevras un mail de confirmation juste après avoir passé commande\n• Le mail avec ton numéro de suivi te sera envoyé le soir même (hors samedi)\n• Tu recevras la lettre qui contiens la carte sous 2 à 3 jours\n• Tu scans le flyer pour accéder à ton espace personnel sur notre site\n• Ensuite, tu effectues le paiement par ticket PCS\n• Et le tour est joué, ton code PIN sera affiché sur ton écran\n• Tu pourras ensuite retirer l’argent dans n’importe quel distributeur\n\n👉 Tout est très simple et tu seras guidé à chaque étape.\n\nAttention : Payer après réception de la carte est un service payant.\nNous facturons ce service car nous passons par une entreprise qui expédie les lettres et ça nous coûte très cher.\nSi nous ne facturons pas cela, nous sommes perdants (pas rentable).\nLe prix de ce service est de 50€, en plus du prix de la carte que tu auras choisi.\nMerci de ta compréhension."
               }
             ]
           },
@@ -319,18 +319,70 @@
               "ms": 4000
             },
             {
-              "type": "emitEvent",
-              "eventName": "orderFlowPayBefore"
+              "type": "goToNode",
+              "nodeId": "order_payment_choice"
+            }
+          ]
+        },
+        {
+          "id": "order_payment_choice",
+          "immediateRender": true,
+          "message": "Choisis l’option qui te convient le mieux 👇\n\n📦 Paiement à la réception\nTu reçois ta carte sous 2 à 3 jours et tu ne paies rien avant de l’avoir entre les mains.\n🔐 Tu reçois ton code PIN après paiement.\n\n⚡ Paiement avant\nTu reçois ta carte sous 24h, avec ton code PIN déjà écrit sur la carte — prête au retrait.",
+          "input": {
+            "enabled": false
+          },
+          "options": [
+            {
+              "label": "📦 Payer à la réception",
+              "actions": [
+                {
+                  "type": "emitEvent",
+                  "eventName": "orderFlowPayOnDelivery"
+                },
+                {
+                  "type": "setContext",
+                  "data": {
+                    "orderPaymentMode": "à la réception"
+                  }
+                },
+                {
+                  "type": "goToNode",
+                  "nodeId": "order_choose_package_intro_cod"
+                }
+              ]
             },
             {
-              "type": "setContext",
-              "data": {
-                "orderPaymentMode": "avant livraison"
-              }
-            },
+              "label": "⚡ Payer avant",
+              "actions": [
+                {
+                  "type": "emitEvent",
+                  "eventName": "orderFlowPayBefore"
+                },
+                {
+                  "type": "setContext",
+                  "data": {
+                    "orderPaymentMode": "avant livraison"
+                  }
+                },
+                {
+                  "type": "goToNode",
+                  "nodeId": "order_choose_package_intro_prepay"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "order_choose_package_intro_cod",
+          "immediateRender": true,
+          "message": "Choisis simplement la carte que tu souhaites recevoir 👇",
+          "input": {
+            "enabled": false
+          },
+          "onEnter": [
             {
               "type": "goToNode",
-              "nodeId": "order_choose_package_intro_prepay"
+              "nodeId": "order_choose_package_cards_cod"
             }
           ]
         },
@@ -558,7 +610,7 @@
               "actions": [
                 {
                   "type": "goToNode",
-                  "nodeId": "order_contest_line2"
+                  "nodeId": "order_payment_choice"
                 }
               ]
             },
@@ -577,6 +629,159 @@
             "enabled": false,
             "onSubmit": []
           }
+        },
+        {
+          "id": "order_choose_package_cards_cod",
+          "immediateRender": true,
+          "media": {
+            "type": "package_select",
+            "items": [
+              {
+                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/bronze.webp",
+                "alt": "Carte Bronze Ca$h",
+                "title": "Bronze Ca$h",
+                "tier": "bronze",
+                "offer": "50EUR = 1000EUR de retrait",
+                "selectionEcho": "Je choisis la Bronze Ca$h 🟤",
+                "actions": [
+                  {
+                    "type": "setContext",
+                    "data": {
+                      "orderPackageTitle": "Bronze Ca$h"
+                    }
+                  },
+                  {
+                    "type": "emitEvent",
+                    "eventName": "orderFlowPackageSelected",
+                    "payload": {
+                      "tier": "bronze"
+                    }
+                  },
+                  {
+                    "type": "goToNode",
+                    "nodeId": "order_order_complete_cod"
+                  }
+                ]
+              },
+              {
+                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/silver.webp",
+                "alt": "Carte Silver Ca$h",
+                "title": "Silver Ca$h",
+                "tier": "silver",
+                "offer": "100€ = 2200€ de retrait",
+                "mostPopular": true,
+                "selectionEcho": "Je choisis la Silver Ca$h ⚪",
+                "actions": [
+                  {
+                    "type": "setContext",
+                    "data": {
+                      "orderPackageTitle": "Silver Ca$h"
+                    }
+                  },
+                  {
+                    "type": "emitEvent",
+                    "eventName": "orderFlowPackageSelected",
+                    "payload": {
+                      "tier": "silver"
+                    }
+                  },
+                  {
+                    "type": "goToNode",
+                    "nodeId": "order_order_complete_cod"
+                  }
+                ]
+              },
+              {
+                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/gold.webp",
+                "alt": "Carte Gold Ca$h",
+                "title": "Gold Ca$h",
+                "tier": "gold",
+                "offer": "150EUR = 3500EUR de retrait",
+                "selectionEcho": "Je choisis la Gold Ca$h 🟡",
+                "actions": [
+                  {
+                    "type": "setContext",
+                    "data": {
+                      "orderPackageTitle": "Gold Ca$h"
+                    }
+                  },
+                  {
+                    "type": "emitEvent",
+                    "eventName": "orderFlowPackageSelected",
+                    "payload": {
+                      "tier": "gold"
+                    }
+                  },
+                  {
+                    "type": "goToNode",
+                    "nodeId": "order_order_complete_cod"
+                  }
+                ]
+              },
+              {
+                "src": "https://cdn.jsdelivr.net/gh/CSMCODE/csm-chat-widget-cdn@main/demo/assets/package/black.webp",
+                "alt": "Carte Black Ca$h",
+                "title": "Black Ca$h",
+                "tier": "black",
+                "offer": "250EUR = 6500EUR de retrait",
+                "selectionEcho": "Je choisis la Black Ca$h ⚫",
+                "actions": [
+                  {
+                    "type": "setContext",
+                    "data": {
+                      "orderPackageTitle": "Black Ca$h"
+                    }
+                  },
+                  {
+                    "type": "emitEvent",
+                    "eventName": "orderFlowPackageSelected",
+                    "payload": {
+                      "tier": "black"
+                    }
+                  },
+                  {
+                    "type": "goToNode",
+                    "nodeId": "order_order_complete_cod"
+                  }
+                ]
+              }
+            ]
+          },
+          "footerLinks": [
+            {
+              "label": "Revenir à l'étape d'avant",
+              "icon": "arrow_left",
+              "actions": [
+                {
+                  "type": "goToNode",
+                  "nodeId": "order_payment_choice"
+                }
+              ]
+            },
+            {
+              "label": "Voir les questions fréquentes",
+              "icon": "help",
+              "actions": [
+                {
+                  "type": "startFlow",
+                  "flowId": "faq_flow"
+                }
+              ]
+            }
+          ],
+          "input": {
+            "enabled": false,
+            "onSubmit": []
+          }
+        },
+        {
+          "id": "order_order_complete_cod",
+          "immediateRender": true,
+          "message": "Parfait 👌 Plus qu'à renseigner ton adresse pour recevoir ta carte.",
+          "input": {
+            "enabled": false
+          },
+          "terminal": true
         },
         {
           "id": "order_prepay_pcs_payment",
