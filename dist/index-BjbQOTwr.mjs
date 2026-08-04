@@ -1758,7 +1758,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-CEhIr49W.mjs").then((module) => {
+      import("./PackageSelectRenderer-OnRZZnUi.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
       }).catch((err) => {
         console.warn("[MessageRenderer] Failed to dynamically load PackageSelectRenderer", err);
@@ -1780,14 +1780,14 @@ class MessageRenderer {
     }
   }
 }
-const SVG_NS = "http://www.w3.org/2000/svg";
+const SVG_NS$1 = "http://www.w3.org/2000/svg";
 function appendCardChevron(btn) {
   const wrap = document.createElement("span");
   wrap.className = "cw-option-card-chevron";
   wrap.setAttribute("aria-hidden", "true");
-  const svg = document.createElementNS(SVG_NS, "svg");
+  const svg = document.createElementNS(SVG_NS$1, "svg");
   svg.setAttribute("viewBox", "0 0 24 24");
-  const p = document.createElementNS(SVG_NS, "path");
+  const p = document.createElementNS(SVG_NS$1, "path");
   p.setAttribute("d", "M9 18l6-6-6-6");
   p.setAttribute("fill", "none");
   p.setAttribute("stroke", "currentColor");
@@ -2149,13 +2149,38 @@ const BASE_CSS = `
 }
 
 #chat-widget-root .cw-order-countdown-value {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.35em;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-variant-numeric: tabular-nums;
   font-size: 0.92rem;
   font-weight: 900;
-  letter-spacing: 0.03em;
-  color: #29f27a;
-  text-shadow: 0 0 12px rgba(41, 242, 122, 0.4);
+  letter-spacing: 0.02em;
+  color: #ddd6fe;
+  text-shadow: 0 0 12px rgba(196, 181, 253, 0.55), 0 0 22px rgba(167, 139, 250, 0.35);
+}
+
+#chat-widget-root .cw-countdown-part {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.05em;
+}
+
+#chat-widget-root .cw-countdown-num {
+  font-size: 1em;
+  font-weight: 900;
+  color: #ddd6fe;
+}
+
+#chat-widget-root .cw-countdown-unit {
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(196, 181, 253, 0.85);
 }
 
 #chat-widget-root .cw-order-countdown-date {
@@ -2176,11 +2201,16 @@ const BASE_CSS = `
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 12px;
-  height: 12px;
-  font-size: 0.62rem;
-  color: rgba(255, 255, 255, 0.72);
+  width: 13px;
+  height: 13px;
+  color: rgba(255, 255, 255, 0.78);
   flex-shrink: 0;
+}
+
+#chat-widget-root .cw-order-countdown-opening-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 #chat-widget-root .cw-header {
@@ -3073,7 +3103,7 @@ const BASE_CSS = `
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
   width: 100%;
   margin-top: auto;
   padding: 5px 10px 8px;
@@ -3089,13 +3119,17 @@ const BASE_CSS = `
   background: #f87171;
   box-shadow: 0 0 8px rgba(248, 113, 113, 0.75);
   flex-shrink: 0;
+  align-self: center;
+  transform-origin: center center;
 }
 
 #chat-widget-root .cw-availability-text {
+  display: inline-flex;
+  align-items: center;
   font-size: clamp(0.52rem, 2vw, 0.6rem);
   font-weight: 500;
+  line-height: 1;
   color: rgba(248, 250, 252, 0.82);
-  line-height: 1.2;
 }
 
 #chat-widget-root .cw-availability-text strong {
@@ -3996,8 +4030,12 @@ const BASE_CSS = `
 
   #chat-widget-root .cw-order-countdown-value {
     font-size: 1.16rem;
-    letter-spacing: 0.04em;
-    text-shadow: 0 0 16px rgba(41, 242, 122, 0.42);
+    letter-spacing: 0.03em;
+    text-shadow: 0 0 16px rgba(196, 181, 253, 0.6), 0 0 28px rgba(167, 139, 250, 0.4);
+  }
+
+  #chat-widget-root .cw-countdown-unit {
+    font-size: 0.7em;
   }
 
   #chat-widget-root .cw-order-countdown-date {
@@ -4007,7 +4045,6 @@ const BASE_CSS = `
   #chat-widget-root .cw-order-countdown-opening-icon {
     width: 14px;
     height: 14px;
-    font-size: 0.72rem;
   }
 
   #chat-widget-root .cw-fab {
@@ -4231,13 +4268,43 @@ const FRENCH_MONTHS = [
   "NOVEMBRE",
   "DECEMBRE"
 ];
-function formatCountdownSeconds(totalSeconds) {
+const SVG_NS = "http://www.w3.org/2000/svg";
+function splitCountdownSeconds(totalSeconds) {
   const safe = Math.max(0, Math.floor(totalSeconds));
   const hours = Math.floor(safe / 3600);
   const minutes = Math.floor(safe % 3600 / 60);
   const seconds = safe % 60;
   const pad = (n) => String(n).padStart(2, "0");
-  return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+  return {
+    hours: pad(hours),
+    minutes: pad(minutes),
+    seconds: pad(seconds)
+  };
+}
+function appendCountdownPart(parent, num, unit) {
+  const part = document.createElement("span");
+  part.className = "cw-countdown-part";
+  const numEl = document.createElement("span");
+  numEl.className = "cw-countdown-num";
+  numEl.textContent = num;
+  const unitEl = document.createElement("span");
+  unitEl.className = "cw-countdown-unit";
+  unitEl.textContent = unit;
+  part.append(numEl, unitEl);
+  parent.appendChild(part);
+}
+function renderCountdownValue(el, totalSeconds) {
+  const { hours, minutes, seconds } = splitCountdownSeconds(totalSeconds);
+  el.replaceChildren();
+  appendCountdownPart(el, hours, "H");
+  el.append(" ");
+  appendCountdownPart(el, minutes, "MIN");
+  el.append(" ");
+  appendCountdownPart(el, seconds, "S");
+  el.setAttribute(
+    "aria-label",
+    `${Number(hours)} heures ${Number(minutes)} minutes ${Number(seconds)} secondes`
+  );
 }
 function formatNextOpeningDate(now = /* @__PURE__ */ new Date()) {
   let monthIndex = now.getMonth() - 1;
@@ -4252,6 +4319,34 @@ function formatNextOpeningDate(now = /* @__PURE__ */ new Date()) {
   }
   return `5 ${FRENCH_MONTHS[monthIndex]} ${year}`;
 }
+function createScheduleIcon() {
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  const add = (tag, attrs) => {
+    const node = document.createElementNS(SVG_NS, tag);
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+    svg.appendChild(node);
+  };
+  const stroke = {
+    fill: "none",
+    stroke: "currentColor",
+    "stroke-width": "2",
+    "stroke-linecap": "round",
+    "stroke-linejoin": "round"
+  };
+  add("rect", { x: "3", y: "4", width: "18", height: "18", rx: "2", ry: "2", ...stroke });
+  add("line", { x1: "16", y1: "2", x2: "16", y2: "6", ...stroke });
+  add("line", { x1: "8", y1: "2", x2: "8", y2: "6", ...stroke });
+  add("line", { x1: "3", y1: "10", x2: "21", y2: "10", ...stroke });
+  add("line", { x1: "8", y1: "14", x2: "8.01", y2: "14", ...stroke });
+  add("line", { x1: "12", y1: "14", x2: "12.01", y2: "14", ...stroke });
+  add("line", { x1: "16", y1: "14", x2: "16.01", y2: "14", ...stroke });
+  add("line", { x1: "8", y1: "18", x2: "8.01", y2: "18", ...stroke });
+  add("line", { x1: "12", y1: "18", x2: "12.01", y2: "18", ...stroke });
+  return svg;
+}
 function createOrderCountdownBanner() {
   const root = document.createElement("div");
   root.className = "cw-order-countdown-banner";
@@ -4264,7 +4359,7 @@ function createOrderCountdownBanner() {
   closingLabel.textContent = COUNTDOWN_CLOSING_LABEL;
   const countdownValue = document.createElement("span");
   countdownValue.className = "cw-order-countdown-value";
-  countdownValue.textContent = formatCountdownSeconds(COUNTDOWN_INITIAL_SECONDS);
+  renderCountdownValue(countdownValue, COUNTDOWN_INITIAL_SECONDS);
   closingRow.append(closingLabel, countdownValue);
   const divider = document.createElement("span");
   divider.className = "cw-order-countdown-divider";
@@ -4274,7 +4369,7 @@ function createOrderCountdownBanner() {
   const openingIcon = document.createElement("span");
   openingIcon.className = "cw-order-countdown-opening-icon";
   openingIcon.setAttribute("aria-hidden", "true");
-  openingIcon.textContent = "◷";
+  openingIcon.appendChild(createScheduleIcon());
   const openingLabel = document.createElement("span");
   openingLabel.className = "cw-order-countdown-label";
   openingLabel.textContent = COUNTDOWN_OPENING_LABEL;
@@ -4290,13 +4385,13 @@ function createOrderCountdownBanner() {
     if (remainingSeconds < 0) {
       remainingSeconds = COUNTDOWN_INITIAL_SECONDS;
     }
-    countdownValue.textContent = formatCountdownSeconds(remainingSeconds);
+    renderCountdownValue(countdownValue, remainingSeconds);
   };
   return {
     element: root,
     start() {
       if (timerId !== null) return;
-      countdownValue.textContent = formatCountdownSeconds(remainingSeconds);
+      renderCountdownValue(countdownValue, remainingSeconds);
       timerId = setInterval(tick, 1e3);
     },
     stop() {
