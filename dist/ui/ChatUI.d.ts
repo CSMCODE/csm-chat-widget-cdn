@@ -35,6 +35,8 @@ export declare class ChatUI {
     private messagesLoadCaptureHandler;
     private messagesMutationObserver;
     private mutationScrollScheduled;
+    private orderCountdownBanner;
+    private countdownStarted;
     constructor(bus: EventBus, avatarSrc: string);
     /** Hide or show the entire widget chrome (launcher + panel). Host-facing API delegates here. */
     setEmbedVisible(visible: boolean): void;

@@ -1,7 +1,14 @@
 import { i as interpolateAll } from "./faq-BVDEs-g4.mjs";
+import { A as AVAILABILITY_LABEL } from "./index-uoOOzeG0.mjs";
 const EUR_REGEX = /EUR/gi;
 const AMOUNT_REGEX = /\d[\d.,]*(?:\s*€)?/g;
 const DEFAULT_TIERS = ["bronze", "silver", "gold", "black"];
+const TIER_AVAILABILITY = {
+  bronze: 2,
+  silver: 4,
+  gold: 5,
+  black: 3
+};
 function resolveTier(item, index) {
   var _a;
   if (item.tier) return item.tier;
@@ -55,6 +62,10 @@ class PackageSelectRenderer {
       if (item.mostPopular) {
         btn.classList.add("cw-package-select-card--most-popular");
       }
+      const availabilityCount = TIER_AVAILABILITY[tier];
+      if (availabilityCount !== void 0) {
+        btn.classList.add("cw-package-select-card--has-availability");
+      }
       const thumb = document.createElement("span");
       thumb.className = "cw-package-select-thumb-wrap";
       const img = document.createElement("img");
@@ -98,6 +109,20 @@ class PackageSelectRenderer {
       }
       btn.appendChild(thumb);
       btn.appendChild(body);
+      if (availabilityCount !== void 0) {
+        const availability = document.createElement("span");
+        availability.className = "cw-package-select-availability";
+        const dot = document.createElement("span");
+        dot.className = "cw-availability-dot cw-breathe";
+        dot.setAttribute("aria-hidden", "true");
+        const text = document.createElement("span");
+        text.className = "cw-availability-text";
+        const countEl = document.createElement("strong");
+        countEl.textContent = String(availabilityCount);
+        text.append(countEl, ` ${AVAILABILITY_LABEL}`);
+        availability.append(dot, text);
+        btn.appendChild(availability);
+      }
       if (item.mostPopular) {
         const ribbon = document.createElement("span");
         ribbon.className = "cw-package-select-ribbon";
