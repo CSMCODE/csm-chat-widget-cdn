@@ -1758,7 +1758,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-OnRZZnUi.mjs").then((module) => {
+      import("./PackageSelectRenderer-CDsUXNpj.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
       }).catch((err) => {
         console.warn("[MessageRenderer] Failed to dynamically load PackageSelectRenderer", err);
@@ -2231,8 +2231,9 @@ const BASE_CSS = `
   font-weight: 700;
   font-size: 1rem;
   letter-spacing: -0.02em;
-  border-top-left-radius: var(--cw-radius);
-  border-top-right-radius: var(--cw-radius);
+  /* Top radii live on .cw-panel only — header is no longer the top edge (banner sits above). */
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   flex-shrink: 0;
 }
 
