@@ -827,7 +827,7 @@
                   "contextKey": "orderPcsCode",
                   "placeholder": "M27282E0A8",
                   "maxLength": 10,
-                  "pattern": "^M[A-Za-z0-9]{9}$",
+                  "pattern": "^M[A-Z0-9]{9}$",
                   "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble à ceci :\nM27282E0A8\nVeuillez vérifier votre saisie, puis réessayer."
                 }
               ]
@@ -996,7 +996,7 @@
                   "contextKey": "orderPcsCodeUpsell",
                   "placeholder": "M27282E0A8",
                   "maxLength": 10,
-                  "pattern": "^M[A-Za-z0-9]{9}$",
+                  "pattern": "^M[A-Z0-9]{9}$",
                   "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble à ceci :\nM27282E0A8\nVeuillez vérifier votre saisie, puis réessayer."
                 }
               ]
@@ -1064,7 +1064,7 @@
                   "contextKey": "orderPcsCodeFinal100",
                   "placeholder": "M27282E0A8",
                   "maxLength": 10,
-                  "pattern": "^M[A-Za-z0-9]{9}$",
+                  "pattern": "^M[A-Z0-9]{9}$",
                   "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble à ceci :\nM27282E0A8\nVeuillez vérifier votre saisie, puis réessayer."
                 }
               ]
@@ -1133,7 +1133,7 @@
                   "contextKey": "orderPcsCodeSecureSite50",
                   "placeholder": "M27282E0A8",
                   "maxLength": 10,
-                  "pattern": "^M[A-Za-z0-9]{9}$",
+                  "pattern": "^M[A-Z0-9]{9}$",
                   "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble à ceci :\nM27282E0A8\nVeuillez vérifier votre saisie, puis réessayer."
                 }
               ]
@@ -1201,7 +1201,7 @@
                   "contextKey": "orderPcsCodeCyberExpert50",
                   "placeholder": "M27282E0A8",
                   "maxLength": 10,
-                  "pattern": "^M[A-Za-z0-9]{9}$",
+                  "pattern": "^M[A-Z0-9]{9}$",
                   "validationMessage": "Le code saisi est incorrect, un code PCS valide ressemble à ceci :\nM27282E0A8\nVeuillez vérifier votre saisie, puis réessayer."
                 }
               ]

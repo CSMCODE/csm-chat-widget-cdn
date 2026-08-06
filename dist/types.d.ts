@@ -184,7 +184,8 @@ export interface FlowFormField {
     readonly placeholder?: string;
     /**
      * Optional ECMAScript regex source (no slashes). When set with `validationMessage`, the trimmed
-     * value must match on submit; supports `^M[A-Z0-9]{9}$` style PCS checks.
+     * value must match on submit. Patterned fields are normalized with `toUpperCase()` before the
+     * check and when writing to context (PCS-style codes like `^M[A-Z0-9]{9}$`).
      */
     readonly pattern?: string;
     /**

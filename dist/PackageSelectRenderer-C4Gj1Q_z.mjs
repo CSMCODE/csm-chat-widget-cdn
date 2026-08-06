@@ -1,5 +1,5 @@
 import { i as interpolateAll } from "./faq-BVDEs-g4.mjs";
-import { A as AVAILABILITY_LABEL } from "./index-CGYod9cS.mjs";
+import { A as AVAILABILITY_LABEL } from "./index-rJ8hl1DK.mjs";
 const EUR_REGEX = /EUR/gi;
 const AMOUNT_REGEX = /\d[\d.,]*(?:\s*€)?/g;
 const DEFAULT_TIERS = ["bronze", "silver", "gold", "black"];
@@ -119,7 +119,9 @@ class PackageSelectRenderer {
         text.className = "cw-availability-text";
         const countEl = document.createElement("strong");
         countEl.textContent = String(availabilityCount);
-        text.append(countEl, ` ${AVAILABILITY_LABEL}`);
+        const labelEl = document.createElement("span");
+        labelEl.textContent = AVAILABILITY_LABEL;
+        text.append(countEl, labelEl);
         availability.append(dot, text);
         btn.appendChild(availability);
       }

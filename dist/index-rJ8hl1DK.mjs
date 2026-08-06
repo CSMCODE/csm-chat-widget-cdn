@@ -1758,7 +1758,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-CDsUXNpj.mjs").then((module) => {
+      import("./PackageSelectRenderer-C4Gj1Q_z.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
       }).catch((err) => {
         console.warn("[MessageRenderer] Failed to dynamically load PackageSelectRenderer", err);
@@ -2968,8 +2968,9 @@ const BASE_CSS = `
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px 10px 4px;
-  overflow: hidden;
+  padding: 12px 10px 8px;
+  /* Keep visible so soft drop-shadows are not clipped into a hard edge */
+  overflow: visible;
   background: transparent;
 }
 
@@ -2980,7 +2981,11 @@ const BASE_CSS = `
   height: auto;
   object-fit: contain;
   display: block;
-  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.45));
+  /* Layered soft cast: contact + mid + ambient (avoids a hard silhouette line) */
+  filter:
+    drop-shadow(0 2px 3px rgba(0, 0, 0, 0.28))
+    drop-shadow(0 10px 18px rgba(0, 0, 0, 0.32))
+    drop-shadow(0 22px 36px rgba(0, 0, 0, 0.22));
 }
 
 /* POPULAIRE: pill half inside / half outside card top edge (center on border) */
@@ -3127,6 +3132,7 @@ const BASE_CSS = `
 #chat-widget-root .cw-availability-text {
   display: inline-flex;
   align-items: center;
+  gap: 0.3em;
   font-size: clamp(0.52rem, 2vw, 0.6rem);
   font-weight: 500;
   line-height: 1;
@@ -4135,6 +4141,10 @@ function renderFormBlock(node, context, onValidSubmit, debug, avatarSrc) {
     if (typeof field.maxLength === "number" && field.maxLength >= 1) {
       input.maxLength = field.maxLength;
     }
+    if (field.pattern !== void 0 && field.validationMessage !== void 0) {
+      input.autocapitalize = "characters";
+      input.spellcheck = false;
+    }
     const ck = (_d = field.contextKey) != null ? _d : field.id;
     const existing = context[ck];
     if (typeof existing === "string" || typeof existing === "number") {
@@ -4201,8 +4211,12 @@ function renderFormBlock(node, context, onValidSubmit, debug, avatarSrc) {
         hint.textContent = "";
         hint.hidden = true;
       }
-      const v = el.value.replace(/<[^>]*>?/gm, "").trim();
+      const vRaw = el.value.replace(/<[^>]*>?/gm, "").trim();
+      const v = f.pattern !== void 0 && f.validationMessage !== void 0 ? vRaw.toUpperCase() : vRaw;
       values[f.id] = v;
+      if (v !== vRaw) {
+        el.value = v;
+      }
       if (f.required && !v) {
         ok = false;
         el.classList.add("cw-form-input--error");
