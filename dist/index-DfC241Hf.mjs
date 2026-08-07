@@ -1758,7 +1758,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-C4Gj1Q_z.mjs").then((module) => {
+      import("./PackageSelectRenderer-DQgIBtRc.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
       }).catch((err) => {
         console.warn("[MessageRenderer] Failed to dynamically load PackageSelectRenderer", err);
@@ -2885,7 +2885,7 @@ const BASE_CSS = `
 #chat-widget-root .cw-package-select-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: start;
+  align-items: stretch;
   gap: 12px;
   padding: 16px 2px 8px;
 }
@@ -2913,7 +2913,8 @@ const BASE_CSS = `
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  aspect-ratio: 1 / 1.2;
+  /* Content-sized height — fixed aspect-ratio left empty space under the offer / availability. */
+  height: auto;
   max-width: 100%;
   border: 1px solid rgba(196, 181, 253, 0.4);
   border-radius: 16px;
@@ -2961,14 +2962,14 @@ const BASE_CSS = `
 
 /* ~Top half: 3D card artwork */
 #chat-widget-root .cw-package-select-thumb-wrap {
-  flex: 0 1 42%;
+  flex: 0 0 auto;
   min-height: 0;
   width: 100%;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px 10px 8px;
+  padding: 10px 10px 4px;
   /* Keep visible so soft drop-shadows are not clipped into a hard edge */
   overflow: visible;
   background: transparent;
@@ -3024,7 +3025,7 @@ const BASE_CSS = `
 
 /* ~Bottom half: title, rule, inset offer */
 #chat-widget-root .cw-package-select-copy {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-height: 0;
   width: 100%;
   box-sizing: border-box;
@@ -3033,12 +3034,12 @@ const BASE_CSS = `
   align-items: center;
   justify-content: flex-start;
   gap: 4px;
-  padding: 2px 10px 6px;
+  padding: 2px 10px 4px;
   overflow: hidden;
 }
 
 #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-copy {
-  padding-bottom: 4px;
+  padding-bottom: 2px;
 }
 
 #chat-widget-root .cw-package-select-title {
@@ -3090,6 +3091,8 @@ const BASE_CSS = `
   display: block;
   width: 100%;
   min-width: 0;
+  /* Reserve 2 lines so 1-line vs 2-line offers keep equal card heights in the grid. */
+  min-height: calc(1.28em * 2);
   font-size: clamp(0.56rem, 2.2vw, 0.62rem);
   font-weight: 600;
   color: rgba(248, 250, 252, 0.9);
@@ -3112,7 +3115,7 @@ const BASE_CSS = `
   gap: 6px;
   width: 100%;
   margin-top: auto;
-  padding: 5px 10px 8px;
+  padding: 5px 10px 7px;
   box-sizing: border-box;
   border-top: 1px solid rgba(248, 113, 113, 0.14);
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.32) 100%);
@@ -4066,16 +4069,17 @@ const BASE_CSS = `
   }
 
   #chat-widget-root .cw-package-select-list {
-    gap: 10px;
-    padding: 14px 0 6px;
+    gap: 8px;
+    padding: 8px 0 4px;
   }
 
   #chat-widget-root .cw-package-select-card {
-    aspect-ratio: 1 / 1.22;
+    height: auto;
+    border-radius: 14px;
   }
 
   #chat-widget-root .cw-package-select-card--has-availability {
-    aspect-ratio: 1 / 1.26;
+    height: auto;
   }
 
   #chat-widget-root .cw-package-select-ribbon {
@@ -4087,8 +4091,44 @@ const BASE_CSS = `
     font-size: max(0.5rem, 8px);
   }
 
+  #chat-widget-root .cw-package-select-thumb-wrap {
+    padding: 6px 6px 2px;
+  }
+
+  #chat-widget-root .cw-package-select-thumb {
+    width: 76%;
+  }
+
   #chat-widget-root .cw-package-select-copy {
-    padding: 2px 8px 10px;
+    padding: 1px 6px 2px;
+    gap: 3px;
+  }
+
+  #chat-widget-root .cw-package-select-title {
+    font-size: clamp(0.64rem, 2.6vw, 0.76rem);
+  }
+
+  #chat-widget-root .cw-package-select-offer-panel {
+    padding: 5px 6px;
+    border-radius: 9px;
+  }
+
+  #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-offer-panel {
+    padding: 4px 6px;
+  }
+
+  #chat-widget-root .cw-package-select-offer {
+    font-size: clamp(0.5rem, 2vw, 0.58rem);
+    min-height: calc(1.28em * 2);
+  }
+
+  #chat-widget-root .cw-package-select-availability {
+    padding: 3px 6px 5px;
+    gap: 4px;
+  }
+
+  #chat-widget-root .cw-availability-text {
+    font-size: clamp(0.48rem, 1.8vw, 0.56rem);
   }
 }
 `;
@@ -4264,6 +4304,53 @@ function renderFormBlock(node, context, onValidSubmit, debug, avatarSrc) {
   row.appendChild(createBotAvatarElement(avatarSrc));
   row.appendChild(bubble);
   return row;
+}
+const PACKAGE_SELECT_INTRO_PIN_MARGIN_PX = 8;
+function isPackageSelectOnlyRow(el) {
+  if (!(el instanceof HTMLElement)) return false;
+  return Boolean(
+    el.querySelector(
+      ".cw-message--package-select-only, .cw-package-select-list, .cw-package-select-placeholder"
+    )
+  );
+}
+function findPackageSelectFrame(messagesArea) {
+  if (!messagesArea) return null;
+  const last = messagesArea.lastElementChild;
+  if (!(last instanceof HTMLElement) || !isPackageSelectOnlyRow(last)) return null;
+  let prev = last.previousElementSibling;
+  while (prev) {
+    if (prev instanceof HTMLElement && prev.classList.contains("cw-message-row")) {
+      if (prev.querySelector(".cw-message-text")) {
+        return { intro: prev, cards: last };
+      }
+    }
+    prev = prev.previousElementSibling;
+  }
+  return null;
+}
+function clampScrollTop(area, nextTop) {
+  const maxScroll = Math.max(0, area.scrollHeight - area.clientHeight);
+  return Math.max(0, Math.min(maxScroll, nextTop));
+}
+function applyScrollTop(area, nextTop, behavior) {
+  const top = clampScrollTop(area, nextTop);
+  if (typeof area.scrollTo === "function") {
+    area.scrollTo({ top, behavior });
+  } else {
+    area.scrollTop = top;
+  }
+}
+function framePackageSelectInTranscript(messagesArea, behavior = "auto") {
+  const frame = findPackageSelectFrame(messagesArea);
+  if (!frame || !(messagesArea instanceof HTMLElement)) return false;
+  if (!frame.intro.isConnected || !frame.cards.isConnected) return false;
+  const area = messagesArea;
+  const areaRect = area.getBoundingClientRect();
+  const introRect = frame.intro.getBoundingClientRect();
+  const nextTop = area.scrollTop + (introRect.top - areaRect.top) - PACKAGE_SELECT_INTRO_PIN_MARGIN_PX;
+  applyScrollTop(area, nextTop, behavior);
+  return true;
 }
 const COUNTDOWN_CLOSING_LABEL = "FERMETURE DES COMMANDES DANS :";
 const COUNTDOWN_OPENING_LABEL = "PROCHAINE OUVERTURE LE :";
@@ -4893,6 +4980,8 @@ class ChatUI {
    * Scrolls so the latest message is in view. When `force` is false, scrolls only if the user is
    * following new messages (`followLatest`) or is still near the bottom (instantaneous layout).
    * `force` is used after `startFlow`, option clicks, and user-sent messages.
+   * Package-select-only rows frame the preceding intro message with the card grid so the
+   * prompt stays visible above the cards on short mobile viewports.
    */
   scrollToLatest(force) {
     if (!force && !this.followLatest && !this.isNearBottom()) return;
@@ -4900,6 +4989,10 @@ class ChatUI {
     const run = () => {
       if (!this.messagesArea || isFaqPinLocked(this.messagesArea)) return;
       const area = this.messagesArea;
+      if (findPackageSelectFrame(area) && framePackageSelectInTranscript(area, "auto")) {
+        this.followLatest = true;
+        return;
+      }
       area.scrollTop = area.scrollHeight;
       const last = area.lastElementChild;
       if (last && typeof last.scrollIntoView === "function" && !isInsideFaqSubtree(last)) {

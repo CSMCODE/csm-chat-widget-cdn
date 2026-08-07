@@ -63,6 +63,8 @@ export declare class ChatUI {
      * Scrolls so the latest message is in view. When `force` is false, scrolls only if the user is
      * following new messages (`followLatest`) or is still near the bottom (instantaneous layout).
      * `force` is used after `startFlow`, option clicks, and user-sent messages.
+     * Package-select-only rows frame the preceding intro message with the card grid so the
+     * prompt stays visible above the cards on short mobile viewports.
      */
     private scrollToLatest;
     private syncFooterCtaContent;
