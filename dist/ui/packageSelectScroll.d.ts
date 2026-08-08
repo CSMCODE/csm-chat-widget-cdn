@@ -6,8 +6,9 @@ export type PackageSelectFrame = {
     readonly cards: HTMLElement;
 };
 /**
- * When the latest transcript item is a package-select-only row (cards without a message),
- * return the preceding intro message row and the cards row so scroll can keep both framed.
+ * When the transcript contains a package-select-only row (cards without a message),
+ * return that row plus the preceding intro message row so scroll can keep both framed.
+ * Walks from the end so typing indicators or later siblings do not hide the frame.
  */
 export declare function findPackageSelectFrame(messagesArea: HTMLElement | null | undefined): PackageSelectFrame | null;
 /**

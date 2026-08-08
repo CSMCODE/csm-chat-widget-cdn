@@ -1758,8 +1758,9 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-DQgIBtRc.mjs").then((module) => {
+      import("./PackageSelectRenderer-D6tLSFUM.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
+        ph.dispatchEvent(new CustomEvent("cw-package-select-rendered", { bubbles: true }));
       }).catch((err) => {
         console.warn("[MessageRenderer] Failed to dynamically load PackageSelectRenderer", err);
       });
@@ -4316,13 +4317,20 @@ function isPackageSelectOnlyRow(el) {
 }
 function findPackageSelectFrame(messagesArea) {
   if (!messagesArea) return null;
-  const last = messagesArea.lastElementChild;
-  if (!(last instanceof HTMLElement) || !isPackageSelectOnlyRow(last)) return null;
-  let prev = last.previousElementSibling;
+  let cards = null;
+  for (let i = messagesArea.children.length - 1; i >= 0; i--) {
+    const child = messagesArea.children[i];
+    if (child instanceof HTMLElement && isPackageSelectOnlyRow(child)) {
+      cards = child;
+      break;
+    }
+  }
+  if (!cards) return null;
+  let prev = cards.previousElementSibling;
   while (prev) {
     if (prev instanceof HTMLElement && prev.classList.contains("cw-message-row")) {
       if (prev.querySelector(".cw-message-text")) {
-        return { intro: prev, cards: last };
+        return { intro: prev, cards };
       }
     }
     prev = prev.previousElementSibling;
@@ -4723,6 +4731,10 @@ class ChatUI {
   /** Pin-to-bottom when the user is following; re-scroll after lazy media / staged DOM without ResizeObserver on scrollHeight-only growth. */
   attachTranscriptScrollBehavior() {
     this.messagesScrollHandler = () => {
+      if (findPackageSelectFrame(this.messagesArea)) {
+        this.followLatest = true;
+        return;
+      }
       this.followLatest = this.isNearBottom();
     };
     this.messagesArea.addEventListener("scroll", this.messagesScrollHandler, { passive: true });
@@ -4730,13 +4742,19 @@ class ChatUI {
       const t = e.target;
       if (!(t instanceof HTMLImageElement) && !(t instanceof HTMLVideoElement)) return;
       if (isInsideFaqSubtree(t) || isFaqPinLocked(this.messagesArea)) return;
-      if (this.followLatest) {
+      if (this.followLatest || findPackageSelectFrame(this.messagesArea)) {
         this.scrollToLatest(false);
       }
     };
     this.messagesArea.addEventListener("load", this.messagesLoadCaptureHandler, true);
+    this.messagesArea.addEventListener("cw-package-select-rendered", () => {
+      this.followLatest = true;
+      this.scrollToLatest(true);
+    });
     this.messagesMutationObserver = new MutationObserver((records) => {
-      if (!this.followLatest || isFaqPinLocked(this.messagesArea)) return;
+      if (isFaqPinLocked(this.messagesArea)) return;
+      const packageFrame = findPackageSelectFrame(this.messagesArea);
+      if (!this.followLatest && !packageFrame) return;
       if (records.length > 0 && records.every((r) => isInsideFaqSubtree(r.target))) {
         return;
       }
@@ -4744,7 +4762,7 @@ class ChatUI {
       this.mutationScrollScheduled = true;
       requestAnimationFrame(() => {
         this.mutationScrollScheduled = false;
-        if (this.followLatest) {
+        if (this.followLatest || findPackageSelectFrame(this.messagesArea)) {
           this.scrollToLatest(false);
         }
       });
@@ -4984,12 +5002,13 @@ class ChatUI {
    * prompt stays visible above the cards on short mobile viewports.
    */
   scrollToLatest(force) {
-    if (!force && !this.followLatest && !this.isNearBottom()) return;
+    const hasPackageFrame = Boolean(findPackageSelectFrame(this.messagesArea));
+    if (!force && !this.followLatest && !hasPackageFrame && !this.isNearBottom()) return;
     if (!this.messagesArea || isFaqPinLocked(this.messagesArea)) return;
     const run = () => {
       if (!this.messagesArea || isFaqPinLocked(this.messagesArea)) return;
       const area = this.messagesArea;
-      if (findPackageSelectFrame(area) && framePackageSelectInTranscript(area, "auto")) {
+      if (framePackageSelectInTranscript(area, "auto")) {
         this.followLatest = true;
         return;
       }
