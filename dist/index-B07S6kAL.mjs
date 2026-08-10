@@ -1758,7 +1758,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-D6tLSFUM.mjs").then((module) => {
+      import("./PackageSelectRenderer-JwKXT2qU.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
         ph.dispatchEvent(new CustomEvent("cw-package-select-rendered", { bubbles: true }));
       }).catch((err) => {
@@ -4315,17 +4315,27 @@ function isPackageSelectOnlyRow(el) {
     )
   );
 }
+function isTransientAfterPackageSelect(el) {
+  return el instanceof HTMLElement && Boolean(el.querySelector(".cw-typing-indicator"));
+}
 function findPackageSelectFrame(messagesArea) {
   if (!messagesArea) return null;
   let cards = null;
+  let cardsIndex = -1;
   for (let i = messagesArea.children.length - 1; i >= 0; i--) {
     const child = messagesArea.children[i];
     if (child instanceof HTMLElement && isPackageSelectOnlyRow(child)) {
       cards = child;
+      cardsIndex = i;
       break;
     }
   }
-  if (!cards) return null;
+  if (!cards || cardsIndex < 0) return null;
+  for (let i = cardsIndex + 1; i < messagesArea.children.length; i++) {
+    const after = messagesArea.children[i];
+    if (!after || isTransientAfterPackageSelect(after)) continue;
+    return null;
+  }
   let prev = cards.previousElementSibling;
   while (prev) {
     if (prev instanceof HTMLElement && prev.classList.contains("cw-message-row")) {

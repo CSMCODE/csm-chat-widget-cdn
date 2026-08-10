@@ -6,9 +6,11 @@ export type PackageSelectFrame = {
     readonly cards: HTMLElement;
 };
 /**
- * When the transcript contains a package-select-only row (cards without a message),
+ * When the transcript's latest step is still package-select (cards without a message),
  * return that row plus the preceding intro message row so scroll can keep both framed.
- * Walks from the end so typing indicators or later siblings do not hide the frame.
+ * Typing indicators after the cards are ignored; any other later row (form, next bot/user
+ * message) means the user has moved on — do not keep framing package select (that would
+ * yank the viewport back when form inputs mutate and trigger the MutationObserver).
  */
 export declare function findPackageSelectFrame(messagesArea: HTMLElement | null | undefined): PackageSelectFrame | null;
 /**
