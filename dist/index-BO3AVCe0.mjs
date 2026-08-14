@@ -720,6 +720,12 @@ class JsonValidator {
           );
         }
       }
+      if (row.outOfStock !== void 0 && row.outOfStock !== null && typeof row.outOfStock !== "boolean") {
+        console.warn(
+          `[JsonValidator] Node "${nodeId}" in flow "${flowId}" has a package_select item with invalid outOfStock (use true or false). Field dropped.`
+        );
+      }
+      const outOfStock = row.outOfStock === true;
       const item = {
         src: src.trim(),
         alt: alt.trim(),
@@ -728,7 +734,8 @@ class JsonValidator {
         ...offer !== void 0 ? { offer } : {},
         ...mostPopular ? { mostPopular: true } : {},
         ...selectionEcho !== void 0 ? { selectionEcho } : {},
-        ...tier !== void 0 ? { tier } : {}
+        ...tier !== void 0 ? { tier } : {},
+        ...outOfStock ? { outOfStock: true } : {}
       };
       out.push(item);
     }
@@ -1758,7 +1765,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-JwKXT2qU.mjs").then((module) => {
+      import("./PackageSelectRenderer-E15Xk87V.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
         ph.dispatchEvent(new CustomEvent("cw-package-select-rendered", { bubbles: true }));
       }).catch((err) => {
@@ -2941,7 +2948,7 @@ const BASE_CSS = `
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
-#chat-widget-root .cw-package-select-card:hover:not(.cw-package-select-card--disabled) {
+#chat-widget-root .cw-package-select-card:hover:not(.cw-package-select-card--disabled):not(.cw-package-select-card--out-of-stock) {
   transform: translateY(-3px);
   border-color: rgba(221, 214, 254, 0.72);
   box-shadow:
@@ -2959,6 +2966,53 @@ const BASE_CSS = `
 #chat-widget-root .cw-package-select-card--disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+#chat-widget-root .cw-package-select-card--out-of-stock {
+  border-color: rgba(148, 163, 184, 0.28);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  cursor: default;
+}
+
+#chat-widget-root .cw-package-select-card--out-of-stock .cw-package-select-thumb-wrap {
+  overflow: hidden;
+}
+
+#chat-widget-root .cw-package-select-card--out-of-stock .cw-package-select-thumb {
+  filter:
+    grayscale(1)
+    brightness(0.48)
+    drop-shadow(0 2px 3px rgba(0, 0, 0, 0.28))
+    drop-shadow(0 10px 18px rgba(0, 0, 0, 0.32));
+}
+
+#chat-widget-root .cw-package-select-card--out-of-stock .cw-package-select-copy,
+#chat-widget-root .cw-package-select-card--out-of-stock .cw-package-select-availability {
+  filter: grayscale(1) brightness(0.72);
+  opacity: 0.72;
+}
+
+#chat-widget-root .cw-package-select-oos-banner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  z-index: 4;
+  transform: translateY(-50%);
+  padding: 7px 8px 8px;
+  font-size: clamp(0.52rem, 2.15vw, 0.68rem);
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  background: #e11d2e;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
 }
 
 /* ~Top half: 3D card artwork */
@@ -3985,7 +4039,7 @@ const BASE_CSS = `
     transform: none !important;
   }
   #chat-widget-root .cw-image-select-card:hover:not(.cw-image-select-card--disabled),
-  #chat-widget-root .cw-package-select-card:hover:not(.cw-package-select-card--disabled) {
+  #chat-widget-root .cw-package-select-card:hover:not(.cw-package-select-card--disabled):not(.cw-package-select-card--out-of-stock) {
     transform: none !important;
   }
 }
@@ -4130,6 +4184,12 @@ const BASE_CSS = `
 
   #chat-widget-root .cw-availability-text {
     font-size: clamp(0.48rem, 1.8vw, 0.56rem);
+  }
+
+  #chat-widget-root .cw-package-select-oos-banner {
+    padding: 5px 6px 6px;
+    font-size: clamp(0.46rem, 2vw, 0.58rem);
+    letter-spacing: 0.05em;
   }
 }
 `;

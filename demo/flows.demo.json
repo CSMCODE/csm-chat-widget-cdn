@@ -548,6 +548,7 @@
                 "alt": "Carte Gold Ca$h",
                 "title": "Gold Ca$h",
                 "tier": "gold",
+                "outOfStock": true,
                 "offer": "150EUR = 3500EUR de retrait",
                 "selectionEcho": "Je choisis la Gold Ca$h 🟡",
                 "actions": [
@@ -577,6 +578,7 @@
                 "alt": "Carte Black Ca$h",
                 "title": "Black Ca$h",
                 "tier": "black",
+                "outOfStock": true,
                 "offer": "250EUR = 6500EUR de retrait",
                 "selectionEcho": "Je choisis la Black Ca$h ⚫",
                 "actions": [
@@ -696,6 +698,7 @@
                 "alt": "Carte Gold Ca$h",
                 "title": "Gold Ca$h",
                 "tier": "gold",
+                "outOfStock": true,
                 "offer": "150EUR = 3500EUR de retrait",
                 "selectionEcho": "Je choisis la Gold Ca$h 🟡",
                 "actions": [
@@ -723,6 +726,7 @@
                 "alt": "Carte Black Ca$h",
                 "title": "Black Ca$h",
                 "tier": "black",
+                "outOfStock": true,
                 "offer": "250EUR = 6500EUR de retrait",
                 "selectionEcho": "Je choisis la Black Ca$h ⚫",
                 "actions": [

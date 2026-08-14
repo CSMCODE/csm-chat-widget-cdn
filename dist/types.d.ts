@@ -77,6 +77,11 @@ export type PackageSelectItem = {
     /** Optional visual badge; at most one item should set this to true per node. */
     readonly mostPopular?: boolean;
     /**
+     * When true, the card is shown as out of stock (greyed + banner). Clicks do nothing;
+     * the flow only continues from in-stock items.
+     */
+    readonly outOfStock?: boolean;
+    /**
      * When set, this text (after `{{context.*}}` / `{{input}}` interpolation) is shown as the user
      * message on commit instead of the card `title`.
      */

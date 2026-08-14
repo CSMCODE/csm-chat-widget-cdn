@@ -1,8 +1,10 @@
 import { i as interpolateAll } from "./faq-BVDEs-g4.mjs";
-import { A as AVAILABILITY_LABEL } from "./index-B07S6kAL.mjs";
+import { A as AVAILABILITY_LABEL } from "./index-BGncS9eI.mjs";
 const EUR_REGEX = /EUR/gi;
 const AMOUNT_REGEX = /\d[\d.,]*(?:\s*€)?/g;
 const DEFAULT_TIERS = ["bronze", "silver", "gold", "black"];
+const OUT_OF_STOCK_BANNER_LABEL = "RUPTURE DE STOCK";
+const UNAVAILABLE_LABEL = "INDISPONIBLE";
 const TIER_AVAILABILITY = {
   bronze: 2,
   silver: 4,
@@ -49,18 +51,28 @@ class PackageSelectRenderer {
     let committed = false;
     const disableAll = () => {
       for (const btn of list.querySelectorAll("button.cw-package-select-card")) {
+        if (btn.classList.contains("cw-package-select-card--out-of-stock")) continue;
         btn.disabled = true;
         btn.classList.add("cw-package-select-card--disabled");
       }
     };
     node.media.items.forEach((item, index) => {
       const tier = resolveTier(item, index);
+      const outOfStock = item.outOfStock === true;
+      const renderedTitle = interpolateAll(item.title, context, userInput, debug);
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = `cw-package-select-card cw-package-select-card--tier-${tier}`;
-      btn.setAttribute("aria-label", interpolateAll(item.title, context, userInput, debug));
+      btn.setAttribute(
+        "aria-label",
+        outOfStock ? `${renderedTitle}, ${UNAVAILABLE_LABEL}` : renderedTitle
+      );
       if (item.mostPopular) {
         btn.classList.add("cw-package-select-card--most-popular");
+      }
+      if (outOfStock) {
+        btn.classList.add("cw-package-select-card--out-of-stock");
+        btn.setAttribute("aria-disabled", "true");
       }
       const availabilityCount = TIER_AVAILABILITY[tier];
       if (availabilityCount !== void 0) {
@@ -75,11 +87,17 @@ class PackageSelectRenderer {
       img.loading = "lazy";
       img.decoding = "async";
       thumb.appendChild(img);
+      if (outOfStock) {
+        const banner = document.createElement("span");
+        banner.className = "cw-package-select-oos-banner";
+        banner.textContent = OUT_OF_STOCK_BANNER_LABEL;
+        banner.setAttribute("aria-hidden", "true");
+        thumb.appendChild(banner);
+      }
       const body = document.createElement("span");
       body.className = "cw-package-select-copy";
       const title = document.createElement("span");
       title.className = "cw-package-select-title";
-      const renderedTitle = interpolateAll(item.title, context, userInput, debug);
       title.textContent = renderedTitle;
       body.appendChild(title);
       const rule = document.createElement("span");
@@ -113,15 +131,19 @@ class PackageSelectRenderer {
         const availability = document.createElement("span");
         availability.className = "cw-package-select-availability";
         const dot = document.createElement("span");
-        dot.className = "cw-availability-dot cw-breathe";
+        dot.className = outOfStock ? "cw-availability-dot" : "cw-availability-dot cw-breathe";
         dot.setAttribute("aria-hidden", "true");
         const text = document.createElement("span");
         text.className = "cw-availability-text";
-        const countEl = document.createElement("strong");
-        countEl.textContent = String(availabilityCount);
-        const labelEl = document.createElement("span");
-        labelEl.textContent = AVAILABILITY_LABEL;
-        text.append(countEl, labelEl);
+        if (outOfStock) {
+          text.textContent = UNAVAILABLE_LABEL;
+        } else {
+          const countEl = document.createElement("strong");
+          countEl.textContent = String(availabilityCount);
+          const labelEl = document.createElement("span");
+          labelEl.textContent = AVAILABILITY_LABEL;
+          text.append(countEl, labelEl);
+        }
         availability.append(dot, text);
         btn.appendChild(availability);
       }
@@ -136,7 +158,7 @@ class PackageSelectRenderer {
       }
       list.appendChild(btn);
       btn.addEventListener("click", () => {
-        if (committed || btn.disabled) return;
+        if (outOfStock || committed || btn.disabled) return;
         committed = true;
         disableAll();
         const hasEcho = item.selectionEcho !== void 0 && String(item.selectionEcho).trim() !== "";
@@ -149,5 +171,7 @@ class PackageSelectRenderer {
   }
 }
 export {
-  PackageSelectRenderer
+  OUT_OF_STOCK_BANNER_LABEL,
+  PackageSelectRenderer,
+  UNAVAILABLE_LABEL
 };
