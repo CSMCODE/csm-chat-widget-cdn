@@ -1765,7 +1765,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-B7wCa4Zt.mjs").then((module) => {
+      import("./PackageSelectRenderer-Dcjsychr.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
         ph.dispatchEvent(new CustomEvent("cw-package-select-rendered", { bubbles: true }));
       }).catch((err) => {
@@ -2913,6 +2913,7 @@ const BASE_CSS = `
 }
 
 #chat-widget-root .cw-package-select-card {
+  --cw-pkg-radius: 16px;
   position: relative;
   overflow: visible;
   width: 100%;
@@ -2925,7 +2926,7 @@ const BASE_CSS = `
   height: auto;
   max-width: 100%;
   border: 1px solid rgba(196, 181, 253, 0.4);
-  border-radius: 16px;
+  border-radius: var(--cw-pkg-radius);
   background:
     radial-gradient(120% 80% at 50% 0%, rgba(167, 139, 250, 0.16) 0%, transparent 52%),
     linear-gradient(155deg, rgba(72, 35, 120, 0.92) 0%, rgba(42, 18, 82, 0.96) 45%, rgba(18, 10, 36, 0.99) 100%);
@@ -3172,6 +3173,10 @@ const BASE_CSS = `
   margin-top: auto;
   padding: 5px 10px 7px;
   box-sizing: border-box;
+  overflow: hidden;
+  /* Card stays overflow:visible (badge + art shadows); round this strip so square corners
+     do not poke out under the card's 16px radius. */
+  border-radius: 0 0 calc(var(--cw-pkg-radius) - 1px) calc(var(--cw-pkg-radius) - 1px);
   border-top: 1px solid rgba(248, 113, 113, 0.14);
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.32) 100%);
 }
@@ -4129,8 +4134,9 @@ const BASE_CSS = `
   }
 
   #chat-widget-root .cw-package-select-card {
+    --cw-pkg-radius: 14px;
     height: auto;
-    border-radius: 14px;
+    border-radius: var(--cw-pkg-radius);
   }
 
   #chat-widget-root .cw-package-select-card--has-availability {

@@ -1,5 +1,5 @@
 import { i as interpolateAll } from "./faq-BVDEs-g4.mjs";
-import { A as AVAILABILITY_LABEL } from "./index-BaYDfGdz.mjs";
+import { A as AVAILABILITY_LABEL } from "./index-wAoelbq2.mjs";
 const EUR_REGEX = /EUR/gi;
 const AMOUNT_REGEX = /\d[\d.,]*(?:\s*€)?/g;
 const DEFAULT_TIERS = ["bronze", "silver", "gold", "black"];
