@@ -1765,7 +1765,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-Dcjsychr.mjs").then((module) => {
+      import("./PackageSelectRenderer-C8KXXL9l.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
         ph.dispatchEvent(new CustomEvent("cw-package-select-rendered", { bubbles: true }));
       }).catch((err) => {
@@ -2914,6 +2914,8 @@ const BASE_CSS = `
 
 #chat-widget-root .cw-package-select-card {
   --cw-pkg-radius: 16px;
+  appearance: none;
+  -webkit-appearance: none;
   position: relative;
   overflow: visible;
   width: 100%;
@@ -2927,6 +2929,7 @@ const BASE_CSS = `
   max-width: 100%;
   border: 1px solid rgba(196, 181, 253, 0.4);
   border-radius: var(--cw-pkg-radius);
+  background-clip: padding-box;
   background:
     radial-gradient(120% 80% at 50% 0%, rgba(167, 139, 250, 0.16) 0%, transparent 52%),
     linear-gradient(155deg, rgba(72, 35, 120, 0.92) 0%, rgba(42, 18, 82, 0.96) 45%, rgba(18, 10, 36, 0.99) 100%);
@@ -2939,6 +2942,18 @@ const BASE_CSS = `
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     inset 0 -1px 0 rgba(0, 0, 0, 0.38);
   transition: transform 0.2s var(--cw-ease), box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* Clips fill/children to the rounded rect; ribbon stays on the button so POPULAIRE can hang off the top. */
+#chat-widget-root .cw-package-select-clip {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: inherit;
 }
 
 #chat-widget-root .cw-package-select-card--most-popular {

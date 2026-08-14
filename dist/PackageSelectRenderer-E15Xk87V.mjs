@@ -1,5 +1,5 @@
 import { i as interpolateAll } from "./faq-BVDEs-g4.mjs";
-import { A as AVAILABILITY_LABEL } from "./index-wAoelbq2.mjs";
+import { A as AVAILABILITY_LABEL } from "./index-Bn-dxvMG.mjs";
 const EUR_REGEX = /EUR/gi;
 const AMOUNT_REGEX = /\d[\d.,]*(?:\s*€)?/g;
 const DEFAULT_TIERS = ["bronze", "silver", "gold", "black"];
@@ -125,8 +125,10 @@ class PackageSelectRenderer {
         panel.appendChild(offer);
         body.appendChild(panel);
       }
-      btn.appendChild(thumb);
-      btn.appendChild(body);
+      const clip = document.createElement("span");
+      clip.className = "cw-package-select-clip";
+      clip.appendChild(thumb);
+      clip.appendChild(body);
       if (availabilityCount !== void 0) {
         const availability = document.createElement("span");
         availability.className = "cw-package-select-availability";
@@ -145,8 +147,9 @@ class PackageSelectRenderer {
           text.append(countEl, labelEl);
         }
         availability.append(dot, text);
-        btn.appendChild(availability);
+        clip.appendChild(availability);
       }
+      btn.appendChild(clip);
       if (item.mostPopular) {
         const ribbon = document.createElement("span");
         ribbon.className = "cw-package-select-ribbon";
