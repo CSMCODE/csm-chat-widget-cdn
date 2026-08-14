@@ -1,12 +1,12 @@
 import { i as interpolateAll } from "./faq-BVDEs-g4.mjs";
-import { A as AVAILABILITY_LABEL } from "./index-BGncS9eI.mjs";
+import { A as AVAILABILITY_LABEL } from "./index-BaYDfGdz.mjs";
 const EUR_REGEX = /EUR/gi;
 const AMOUNT_REGEX = /\d[\d.,]*(?:\s*€)?/g;
 const DEFAULT_TIERS = ["bronze", "silver", "gold", "black"];
 const OUT_OF_STOCK_BANNER_LABEL = "RUPTURE DE STOCK";
 const UNAVAILABLE_LABEL = "INDISPONIBLE";
 const TIER_AVAILABILITY = {
-  bronze: 2,
+  bronze: 5,
   silver: 4,
   gold: 5,
   black: 3

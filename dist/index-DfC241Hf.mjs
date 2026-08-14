@@ -1765,7 +1765,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-E15Xk87V.mjs").then((module) => {
+      import("./PackageSelectRenderer-B7wCa4Zt.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
         ph.dispatchEvent(new CustomEvent("cw-package-select-rendered", { bubbles: true }));
       }).catch((err) => {
