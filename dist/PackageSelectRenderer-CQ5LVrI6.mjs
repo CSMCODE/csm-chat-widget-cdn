@@ -1,5 +1,5 @@
 import { i as interpolateAll } from "./faq-BVDEs-g4.mjs";
-import { A as AVAILABILITY_LABEL } from "./index-0ZPtZK0q.mjs";
+import { A as AVAILABILITY_LABEL } from "./index-wWMhNQXE.mjs";
 const EUR_REGEX = /EUR/gi;
 const AMOUNT_REGEX = /\d[\d.,]*(?:\s*€)?/g;
 const DEFAULT_TIERS = ["bronze", "silver", "gold", "black"];
@@ -178,3 +178,5 @@ export {
   PackageSelectRenderer,
   UNAVAILABLE_LABEL
 };
+
+/* cw-ghost-alias 2026-08-17T18:32:14Z */ -> PackageSelectRenderer-vMJaaGrj.mjs

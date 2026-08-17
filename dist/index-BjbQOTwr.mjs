@@ -1765,7 +1765,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-CQ5LVrI6.mjs").then((module) => {
+      import("./PackageSelectRenderer-vMJaaGrj.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
         ph.dispatchEvent(new CustomEvent("cw-package-select-rendered", { bubbles: true }));
       }).catch((err) => {
@@ -2918,6 +2918,7 @@ const BASE_CSS = `
   -webkit-appearance: none;
   position: relative;
   overflow: visible;
+  container-type: inline-size;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -3104,13 +3105,13 @@ const BASE_CSS = `
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 8px;
-  padding: 4px 12px 10px;
+  gap: 10px;
+  padding: 6px 12px 12px;
   overflow: hidden;
 }
 
 #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-copy {
-  padding-bottom: 8px;
+  padding-bottom: 10px;
 }
 
 #chat-widget-root .cw-package-select-title {
@@ -3143,7 +3144,7 @@ const BASE_CSS = `
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding: 7px 12px 8px;
+  padding: 8px 10px 9px;
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.48);
   border: 1px solid rgba(167, 139, 250, 0.1);
@@ -3151,19 +3152,21 @@ const BASE_CSS = `
 }
 
 #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-offer-panel {
-  padding: 7px 12px 8px;
+  padding: 8px 10px 9px;
 }
 
 #chat-widget-root .cw-package-select-offer {
   display: block;
   width: 100%;
   min-width: 0;
-  font-size: clamp(0.62rem, 2.5vw, 0.72rem);
+  font-size: clamp(0.48rem, 6.4cqi, 0.66rem);
   font-weight: 600;
   color: rgba(248, 250, 252, 0.92);
-  line-height: 1.3;
+  line-height: 1.2;
   text-align: center;
-  text-wrap: balance;
+  white-space: nowrap;
+  overflow: hidden;
+  word-spacing: 0.06em;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
@@ -4170,8 +4173,8 @@ const BASE_CSS = `
   }
 
   #chat-widget-root .cw-package-select-copy {
-    padding: 2px 10px 8px;
-    gap: 7px;
+    padding: 4px 10px 10px;
+    gap: 8px;
   }
 
   #chat-widget-root .cw-package-select-title {
@@ -4179,16 +4182,17 @@ const BASE_CSS = `
   }
 
   #chat-widget-root .cw-package-select-offer-panel {
-    padding: 6px 10px 7px;
+    padding: 7px 8px 8px;
     border-radius: 999px;
   }
 
   #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-offer-panel {
-    padding: 6px 10px 7px;
+    padding: 7px 8px 8px;
   }
 
   #chat-widget-root .cw-package-select-offer {
-    font-size: clamp(0.58rem, 2.6vw, 0.68rem);
+    font-size: clamp(0.48rem, 6.4cqi, 0.62rem);
+    white-space: nowrap;
   }
 
   #chat-widget-root .cw-package-select-availability {
@@ -5586,4 +5590,4 @@ export {
   widget as w
 };
 
-/* cw-ghost-alias 2026-08-17T17:58:19Z */ -> index-0ZPtZK0q.mjs
+/* cw-ghost-alias 2026-08-17T18:32:14Z */ -> index-wWMhNQXE.mjs
