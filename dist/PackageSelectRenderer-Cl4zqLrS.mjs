@@ -178,5 +178,3 @@ export {
   PackageSelectRenderer,
   UNAVAILABLE_LABEL
 };
-
-/* cw-ghost-alias 2026-08-17T20:01:58Z */ -> PackageSelectRenderer-Cl4zqLrS.mjs

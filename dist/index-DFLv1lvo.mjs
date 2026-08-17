@@ -5648,5 +5648,3 @@ export {
   peekVisitorId as p,
   widget as w
 };
-
-/* cw-ghost-alias 2026-08-17T20:01:58Z */ -> index-DFLv1lvo.mjs

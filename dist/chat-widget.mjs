@@ -1,4 +1,4 @@
-import { w, g, p } from "./index-wWMhNQXE.mjs";
+import { w, g, p } from "./index-DFLv1lvo.mjs";
 export {
   w as default,
   g as getOrCreateVisitorId,

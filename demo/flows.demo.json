@@ -235,7 +235,7 @@
     },
     {
       "id": "order_flow",
-      "entryNodeId": "order_intro_contest",
+      "entryNodeId": "order_payment_choice",
       "nodes": [
         {
           "id": "order_intro_contest",

@@ -1671,12 +1671,22 @@ class MessageRenderer {
     if (wrapper.classList.contains("cw-message--faq-only")) {
       return wrapper;
     }
+    if (wrapper.classList.contains("cw-message--package-select-only")) {
+      return this.wrapFullWidthRow(wrapper);
+    }
     return this.wrapBotRow(wrapper);
   }
   wrapBotRow(bubble) {
     const row = document.createElement("div");
     row.className = "cw-message-row";
     row.appendChild(createBotAvatarElement(this.avatarSrc));
+    row.appendChild(bubble);
+    return row;
+  }
+  /** Package cards sit in a centered row (no avatar) so left/right gutters stay even. */
+  wrapFullWidthRow(bubble) {
+    const row = document.createElement("div");
+    row.className = "cw-message-row";
     row.appendChild(bubble);
     return row;
   }
@@ -1765,7 +1775,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-vMJaaGrj.mjs").then((module) => {
+      import("./PackageSelectRenderer-Cl4zqLrS.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
         ph.dispatchEvent(new CustomEvent("cw-package-select-rendered", { bubbles: true }));
       }).catch((err) => {
@@ -2344,6 +2354,8 @@ const BASE_CSS = `
   flex-direction: column;
   gap: 14px;
   background: transparent;
+  container-type: size;
+  container-name: cw-transcript;
 }
 
 #chat-widget-root .cw-messages.cw-scrollbar-hidden,
@@ -2440,6 +2452,33 @@ const BASE_CSS = `
   color: var(--cw-text);
 }
 
+#chat-widget-root .cw-messages:has(.cw-package-select-list) {
+  padding: 10px 12px 8px;
+  gap: 10px;
+}
+
+#chat-widget-root .cw-message-row:has(> .cw-message--package-select-only) {
+  justify-content: center;
+  box-sizing: border-box;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  height: 100cqh;
+  max-height: 100cqh;
+  min-height: 0;
+  padding-inline: 8px;
+}
+
+#chat-widget-root .cw-message-row .cw-message.cw-message--package-select-only {
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
 #chat-widget-root .cw-message.cw-message--plain-image {
   max-width: 100%;
   width: 100%;
@@ -2463,6 +2502,11 @@ const BASE_CSS = `
 
 #chat-widget-root .cw-message--package-select-only .cw-package-select-placeholder {
   margin-top: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 #chat-widget-root .cw-user-message {
@@ -2893,9 +2937,14 @@ const BASE_CSS = `
 #chat-widget-root .cw-package-select-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
   align-items: stretch;
-  gap: 14px;
-  padding: 18px 4px 10px;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  gap: 12px;
+  padding: 16px 4px 6px;
+  box-sizing: border-box;
 }
 
 /* Tier: title tint only; shared purple card chrome for all */
@@ -2913,7 +2962,7 @@ const BASE_CSS = `
 }
 
 #chat-widget-root .cw-package-select-card {
-  --cw-pkg-radius: 18px;
+  --cw-pkg-radius: 22px;
   appearance: none;
   -webkit-appearance: none;
   position: relative;
@@ -2925,22 +2974,23 @@ const BASE_CSS = `
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  /* Content-sized height — fixed aspect-ratio left empty space under the offer / availability. */
-  height: auto;
+  /* Fill the transcript pane so the 2×2 + footer stay in view (desktop and mobile). */
+  min-height: 0;
+  height: 100%;
   max-width: 100%;
-  border: 1px solid rgba(196, 181, 253, 0.4);
+  border: 1px solid rgba(196, 181, 253, 0.38);
   border-radius: var(--cw-pkg-radius);
   background-clip: padding-box;
   background:
-    radial-gradient(120% 80% at 50% 0%, rgba(167, 139, 250, 0.16) 0%, transparent 52%),
-    linear-gradient(155deg, rgba(72, 35, 120, 0.92) 0%, rgba(42, 18, 82, 0.96) 45%, rgba(18, 10, 36, 0.99) 100%);
+    radial-gradient(120% 80% at 50% 0%, rgba(167, 139, 250, 0.18) 0%, transparent 52%),
+    linear-gradient(165deg, rgba(78, 38, 128, 0.94) 0%, rgba(38, 16, 74, 0.97) 48%, rgba(16, 8, 32, 0.99) 100%);
   color: var(--cw-on-primary);
   text-align: left;
   cursor: pointer;
   box-shadow:
-    0 0 28px rgba(139, 92, 246, 0.42),
-    0 6px 22px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 24px rgba(139, 92, 246, 0.32),
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
     inset 0 -1px 0 rgba(0, 0, 0, 0.38);
   transition: transform 0.2s var(--cw-ease), box-shadow 0.2s ease, border-color 0.2s ease;
 }
@@ -2950,9 +3000,11 @@ const BASE_CSS = `
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  flex: 1 1 auto;
   width: 100%;
   min-width: 0;
   min-height: 0;
+  height: 100%;
   overflow: hidden;
   border-radius: inherit;
 }
@@ -2966,7 +3018,7 @@ const BASE_CSS = `
 }
 
 #chat-widget-root .cw-package-select-card:hover:not(.cw-package-select-card--disabled):not(.cw-package-select-card--out-of-stock) {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   border-color: rgba(221, 214, 254, 0.72);
   box-shadow:
     0 0 36px rgba(167, 139, 250, 0.55),
@@ -3032,40 +3084,39 @@ const BASE_CSS = `
   pointer-events: none;
 }
 
-/* Artwork on top — give the 3D card room so copy below is not crushed */
+/* Artwork on top — shrinks with the tile so quantity stays on-screen */
 #chat-widget-root .cw-package-select-thumb-wrap {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   min-height: 0;
   width: 100%;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 16px 14px 8px;
-  /* Keep visible so soft drop-shadows are not clipped into a hard edge */
+  padding: 18px 12px 8px;
   overflow: visible;
   background: transparent;
 }
 
 #chat-widget-root .cw-package-select-thumb {
-  width: 88%;
-  max-width: 100%;
+  width: auto;
+  max-width: 92%;
   max-height: 100%;
   height: auto;
   object-fit: contain;
   display: block;
-  /* Layered soft cast: contact + mid + ambient (avoids a hard silhouette line) */
   filter:
     drop-shadow(0 2px 3px rgba(0, 0, 0, 0.28))
     drop-shadow(0 10px 18px rgba(0, 0, 0, 0.32))
     drop-shadow(0 22px 36px rgba(0, 0, 0, 0.22));
 }
 
-/* POPULAIRE: pill half inside / half outside card top edge (center on border) */
+/* POPULAIRE: pill centered on the card's top edge */
 #chat-widget-root .cw-package-select-ribbon {
   position: absolute;
   top: 0;
   left: 50%;
+  right: auto;
   z-index: 5;
   display: flex;
   flex-direction: column;
@@ -3078,24 +3129,24 @@ const BASE_CSS = `
   box-sizing: border-box;
   width: max-content;
   max-width: calc(100% - 4px);
-  padding: 4px 12px 5px;
+  padding: 5px 14px 6px;
   text-align: center;
-  font-size: max(0.56rem, 9px);
+  font-size: max(0.58rem, 9px);
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   white-space: nowrap;
   color: #ffffff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  background: linear-gradient(180deg, #ddd6fe 0%, #8b5cf6 45%, #5b21b6 100%);
-  border: 1px solid rgba(237, 233, 254, 0.5);
+  background: linear-gradient(180deg, #c4b5fd 0%, #8b5cf6 42%, #6d28d9 100%);
+  border: 1px solid rgba(237, 233, 254, 0.55);
   border-radius: 999px;
   box-shadow:
     0 4px 14px rgba(0, 0, 0, 0.4),
     0 0 20px rgba(139, 92, 246, 0.45);
 }
 
-/* Title → offer pill → availability, stacked with air between */
+/* Title + offer stay tight; leftover card height is empty space above quantity. */
 #chat-widget-root .cw-package-select-copy {
   flex: 0 0 auto;
   min-height: 0;
@@ -3105,17 +3156,17 @@ const BASE_CSS = `
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
-  padding: 6px 12px 12px;
+  gap: 12px;
+  padding: 2px 12px 6px;
   overflow: hidden;
 }
 
 #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-copy {
-  padding-bottom: 10px;
+  padding-bottom: 4px;
 }
 
 #chat-widget-root .cw-package-select-title {
-  font-size: clamp(0.78rem, 3.2vw, 0.95rem);
+  font-size: clamp(0.86rem, 3.6vw, 1.02rem);
   font-weight: 800;
   color: var(--cw-pkg-title);
   line-height: 1.2;
@@ -3144,29 +3195,30 @@ const BASE_CSS = `
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding: 8px 10px 9px;
+  padding: 10px 8px 11px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.48);
-  border: 1px solid rgba(167, 139, 250, 0.1);
-  box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.58);
+  border: 1px solid rgba(167, 139, 250, 0.12);
+  box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
 #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-offer-panel {
-  padding: 8px 10px 9px;
+  padding: 10px 8px 11px;
 }
 
 #chat-widget-root .cw-package-select-offer {
   display: block;
   width: 100%;
   min-width: 0;
-  font-size: clamp(0.48rem, 6.4cqi, 0.66rem);
+  font-size: clamp(0.56rem, 7.4cqi, 0.72rem);
   font-weight: 600;
-  color: rgba(248, 250, 252, 0.92);
-  line-height: 1.2;
+  color: rgba(248, 250, 252, 0.94);
+  line-height: 1.25;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
-  word-spacing: 0.06em;
+  letter-spacing: -0.015em;
+  word-spacing: 0.02em;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
@@ -3180,17 +3232,15 @@ const BASE_CSS = `
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 8px;
   width: 100%;
   margin-top: auto;
-  padding: 8px 12px 11px;
+  padding: 12px 12px 14px;
   box-sizing: border-box;
   overflow: hidden;
-  /* Card stays overflow:visible (badge + art shadows); round this strip so square corners
-     do not poke out under the card radius. */
   border-radius: 0 0 calc(var(--cw-pkg-radius) - 1px) calc(var(--cw-pkg-radius) - 1px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background: transparent;
+  background: rgba(0, 0, 0, 0.22);
 }
 
 #chat-widget-root .cw-availability-dot {
@@ -3208,10 +3258,10 @@ const BASE_CSS = `
   display: inline-flex;
   align-items: center;
   gap: 0.3em;
-  font-size: clamp(0.62rem, 2.4vw, 0.72rem);
+  font-size: clamp(0.66rem, 2.5vw, 0.78rem);
   font-weight: 500;
   line-height: 1;
-  color: rgba(248, 250, 252, 0.88);
+  color: rgba(226, 232, 240, 0.82);
 }
 
 #chat-widget-root .cw-availability-text strong {
@@ -4140,68 +4190,78 @@ const BASE_CSS = `
     left: max(20px, env(safe-area-inset-left, 0px));
   }
 
+  #chat-widget-root .cw-message-row:has(> .cw-message--package-select-only) {
+    padding-inline: 10px;
+  }
+
   #chat-widget-root .cw-package-select-list {
     gap: 12px;
-    padding: 16px 2px 8px;
+    padding: 18px 4px 8px;
   }
 
   #chat-widget-root .cw-package-select-card {
-    --cw-pkg-radius: 16px;
-    height: auto;
+    --cw-pkg-radius: 20px;
     border-radius: var(--cw-pkg-radius);
   }
 
-  #chat-widget-root .cw-package-select-card--has-availability {
-    height: auto;
-  }
-
   #chat-widget-root .cw-package-select-ribbon {
+    right: auto;
+    left: 50%;
     transform: translate(-50%, -50%);
   }
 
   #chat-widget-root .cw-package-select-badge {
-    padding: 4px 11px 5px;
-    font-size: max(0.52rem, 8px);
+    padding: 5px 12px 6px;
+    font-size: max(0.54rem, 8px);
   }
 
+  /* Mobile: image stays content-sized so leftover height is the empty band above quantity. */
   #chat-widget-root .cw-package-select-thumb-wrap {
-    padding: 14px 10px 6px;
+    flex: 0 0 auto;
+    padding: 22px 12px 10px;
   }
 
   #chat-widget-root .cw-package-select-thumb {
-    width: 86%;
+    width: 90%;
+    max-width: 90%;
+    height: auto;
+    max-height: none;
   }
 
   #chat-widget-root .cw-package-select-copy {
-    padding: 4px 10px 10px;
-    gap: 8px;
+    padding: 2px 10px 4px;
+    gap: 10px;
+  }
+
+  #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-copy {
+    padding-bottom: 2px;
   }
 
   #chat-widget-root .cw-package-select-title {
-    font-size: clamp(0.74rem, 3.4vw, 0.88rem);
+    font-size: clamp(0.82rem, 3.5vw, 0.96rem);
   }
 
   #chat-widget-root .cw-package-select-offer-panel {
-    padding: 7px 8px 8px;
+    padding: 9px 7px 10px;
     border-radius: 999px;
   }
 
   #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-offer-panel {
-    padding: 7px 8px 8px;
+    padding: 9px 7px 10px;
   }
 
   #chat-widget-root .cw-package-select-offer {
-    font-size: clamp(0.48rem, 6.4cqi, 0.62rem);
+    font-size: clamp(0.54rem, 7.2cqi, 0.7rem);
     white-space: nowrap;
   }
 
   #chat-widget-root .cw-package-select-availability {
-    padding: 7px 10px 10px;
-    gap: 6px;
+    padding: 11px 10px 13px;
+    gap: 7px;
   }
 
   #chat-widget-root .cw-availability-text {
-    font-size: clamp(0.58rem, 2.3vw, 0.68rem);
+    font-size: clamp(0.64rem, 2.4vw, 0.74rem);
   }
 
   #chat-widget-root .cw-package-select-oos-banner {
@@ -4384,7 +4444,6 @@ function renderFormBlock(node, context, onValidSubmit, debug, avatarSrc) {
   row.appendChild(bubble);
   return row;
 }
-const PACKAGE_SELECT_INTRO_PIN_MARGIN_PX = 8;
 const PACKAGE_SELECT_CARD_STAGING_MS = 650;
 function isPackageSelectOnlyRow(el) {
   if (!(el instanceof HTMLElement)) return false;
@@ -4445,7 +4504,7 @@ function framePackageSelectInTranscript(messagesArea, behavior = "auto") {
   const area = messagesArea;
   const areaRect = area.getBoundingClientRect();
   const cardsRect = frame.cards.getBoundingClientRect();
-  const nextTop = area.scrollTop + (cardsRect.top - areaRect.top) - PACKAGE_SELECT_INTRO_PIN_MARGIN_PX;
+  const nextTop = area.scrollTop + (cardsRect.top - areaRect.top);
   applyScrollTop(area, nextTop, behavior);
   return true;
 }
@@ -5589,3 +5648,5 @@ export {
   peekVisitorId as p,
   widget as w
 };
+
+/* cw-ghost-alias 2026-08-17T20:01:58Z */ -> index-DFLv1lvo.mjs

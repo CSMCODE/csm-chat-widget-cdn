@@ -11,6 +11,8 @@ export declare class MessageRenderer {
      */
     renderMessage(node: FlowNode, container: HTMLElement, context?: Record<string, unknown>, userInput?: string, debug?: boolean): HTMLElement | DocumentFragment;
     private wrapBotRow;
+    /** Package cards sit in a centered row (no avatar) so left/right gutters stay even. */
+    private wrapFullWidthRow;
     private renderFaqWithIntro;
     /**
      * Renders `text` into a `<p>` using `textContent` only when there are no newlines; otherwise
