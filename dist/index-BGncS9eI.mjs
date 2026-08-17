@@ -1765,7 +1765,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-q91gDdKG.mjs").then((module) => {
+      import("./PackageSelectRenderer-CQ5LVrI6.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
         ph.dispatchEvent(new CustomEvent("cw-package-select-rendered", { bubbles: true }));
       }).catch((err) => {
@@ -2894,8 +2894,8 @@ const BASE_CSS = `
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
-  gap: 12px;
-  padding: 16px 2px 8px;
+  gap: 14px;
+  padding: 18px 4px 10px;
 }
 
 /* Tier: title tint only; shared purple card chrome for all */
@@ -2913,7 +2913,7 @@ const BASE_CSS = `
 }
 
 #chat-widget-root .cw-package-select-card {
-  --cw-pkg-radius: 16px;
+  --cw-pkg-radius: 18px;
   appearance: none;
   -webkit-appearance: none;
   position: relative;
@@ -3031,7 +3031,7 @@ const BASE_CSS = `
   pointer-events: none;
 }
 
-/* ~Top half: 3D card artwork */
+/* Artwork on top — give the 3D card room so copy below is not crushed */
 #chat-widget-root .cw-package-select-thumb-wrap {
   flex: 0 0 auto;
   min-height: 0;
@@ -3040,14 +3040,14 @@ const BASE_CSS = `
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 10px 4px;
+  padding: 16px 14px 8px;
   /* Keep visible so soft drop-shadows are not clipped into a hard edge */
   overflow: visible;
   background: transparent;
 }
 
 #chat-widget-root .cw-package-select-thumb {
-  width: 82%;
+  width: 88%;
   max-width: 100%;
   max-height: 100%;
   height: auto;
@@ -3094,7 +3094,7 @@ const BASE_CSS = `
     0 0 20px rgba(139, 92, 246, 0.45);
 }
 
-/* ~Bottom half: title, rule, inset offer */
+/* Title → offer pill → availability, stacked with air between */
 #chat-widget-root .cw-package-select-copy {
   flex: 0 0 auto;
   min-height: 0;
@@ -3104,30 +3104,26 @@ const BASE_CSS = `
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 4px;
-  padding: 2px 10px 4px;
+  gap: 8px;
+  padding: 4px 12px 10px;
   overflow: hidden;
 }
 
 #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-copy {
-  padding-bottom: 2px;
+  padding-bottom: 8px;
 }
 
 #chat-widget-root .cw-package-select-title {
-  font-size: clamp(0.72rem, 2.9vw, 0.84rem);
+  font-size: clamp(0.78rem, 3.2vw, 0.95rem);
   font-weight: 800;
   color: var(--cw-pkg-title);
-  line-height: 1.15;
+  line-height: 1.2;
   text-align: center;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
 }
 
 #chat-widget-root .cw-package-select-rule {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: 6px;
-  padding: 0 4px;
+  display: none;
 }
 
 #chat-widget-root .cw-package-select-rule-line {
@@ -3147,27 +3143,25 @@ const BASE_CSS = `
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding: 8px 10px;
-  border-radius: 11px;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(167, 139, 250, 0.12);
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+  padding: 7px 12px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.48);
+  border: 1px solid rgba(167, 139, 250, 0.1);
+  box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.45);
 }
 
 #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-offer-panel {
-  padding: 6px 8px;
+  padding: 7px 12px 8px;
 }
 
 #chat-widget-root .cw-package-select-offer {
   display: block;
   width: 100%;
   min-width: 0;
-  /* Reserve 2 lines so 1-line vs 2-line offers keep equal card heights in the grid. */
-  min-height: calc(1.28em * 2);
-  font-size: clamp(0.56rem, 2.2vw, 0.62rem);
+  font-size: clamp(0.62rem, 2.5vw, 0.72rem);
   font-weight: 600;
-  color: rgba(248, 250, 252, 0.9);
-  line-height: 1.28;
+  color: rgba(248, 250, 252, 0.92);
+  line-height: 1.3;
   text-align: center;
   text-wrap: balance;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
@@ -3183,17 +3177,17 @@ const BASE_CSS = `
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 7px;
   width: 100%;
   margin-top: auto;
-  padding: 5px 10px 7px;
+  padding: 8px 12px 11px;
   box-sizing: border-box;
   overflow: hidden;
   /* Card stays overflow:visible (badge + art shadows); round this strip so square corners
-     do not poke out under the card's 16px radius. */
+     do not poke out under the card radius. */
   border-radius: 0 0 calc(var(--cw-pkg-radius) - 1px) calc(var(--cw-pkg-radius) - 1px);
-  border-top: 1px solid rgba(248, 113, 113, 0.14);
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.32) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
 }
 
 #chat-widget-root .cw-availability-dot {
@@ -3211,10 +3205,10 @@ const BASE_CSS = `
   display: inline-flex;
   align-items: center;
   gap: 0.3em;
-  font-size: clamp(0.52rem, 2vw, 0.6rem);
+  font-size: clamp(0.62rem, 2.4vw, 0.72rem);
   font-weight: 500;
   line-height: 1;
-  color: rgba(248, 250, 252, 0.82);
+  color: rgba(248, 250, 252, 0.88);
 }
 
 #chat-widget-root .cw-availability-text strong {
@@ -4144,12 +4138,12 @@ const BASE_CSS = `
   }
 
   #chat-widget-root .cw-package-select-list {
-    gap: 8px;
-    padding: 8px 0 4px;
+    gap: 12px;
+    padding: 16px 2px 8px;
   }
 
   #chat-widget-root .cw-package-select-card {
-    --cw-pkg-radius: 14px;
+    --cw-pkg-radius: 16px;
     height: auto;
     border-radius: var(--cw-pkg-radius);
   }
@@ -4163,48 +4157,47 @@ const BASE_CSS = `
   }
 
   #chat-widget-root .cw-package-select-badge {
-    padding: 3px 10px 4px;
-    font-size: max(0.5rem, 8px);
+    padding: 4px 11px 5px;
+    font-size: max(0.52rem, 8px);
   }
 
   #chat-widget-root .cw-package-select-thumb-wrap {
-    padding: 6px 6px 2px;
+    padding: 14px 10px 6px;
   }
 
   #chat-widget-root .cw-package-select-thumb {
-    width: 76%;
+    width: 86%;
   }
 
   #chat-widget-root .cw-package-select-copy {
-    padding: 1px 6px 2px;
-    gap: 3px;
+    padding: 2px 10px 8px;
+    gap: 7px;
   }
 
   #chat-widget-root .cw-package-select-title {
-    font-size: clamp(0.64rem, 2.6vw, 0.76rem);
+    font-size: clamp(0.74rem, 3.4vw, 0.88rem);
   }
 
   #chat-widget-root .cw-package-select-offer-panel {
-    padding: 5px 6px;
-    border-radius: 9px;
+    padding: 6px 10px 7px;
+    border-radius: 999px;
   }
 
   #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-offer-panel {
-    padding: 4px 6px;
+    padding: 6px 10px 7px;
   }
 
   #chat-widget-root .cw-package-select-offer {
-    font-size: clamp(0.5rem, 2vw, 0.58rem);
-    min-height: calc(1.28em * 2);
+    font-size: clamp(0.58rem, 2.6vw, 0.68rem);
   }
 
   #chat-widget-root .cw-package-select-availability {
-    padding: 3px 6px 5px;
-    gap: 4px;
+    padding: 7px 10px 10px;
+    gap: 6px;
   }
 
   #chat-widget-root .cw-availability-text {
-    font-size: clamp(0.48rem, 1.8vw, 0.56rem);
+    font-size: clamp(0.58rem, 2.3vw, 0.68rem);
   }
 
   #chat-widget-root .cw-package-select-oos-banner {
@@ -4388,6 +4381,7 @@ function renderFormBlock(node, context, onValidSubmit, debug, avatarSrc) {
   return row;
 }
 const PACKAGE_SELECT_INTRO_PIN_MARGIN_PX = 8;
+const PACKAGE_SELECT_CARD_STAGING_MS = 650;
 function isPackageSelectOnlyRow(el) {
   if (!(el instanceof HTMLElement)) return false;
   return Boolean(
@@ -4446,8 +4440,8 @@ function framePackageSelectInTranscript(messagesArea, behavior = "auto") {
   if (!frame.intro.isConnected || !frame.cards.isConnected) return false;
   const area = messagesArea;
   const areaRect = area.getBoundingClientRect();
-  const introRect = frame.intro.getBoundingClientRect();
-  const nextTop = area.scrollTop + (introRect.top - areaRect.top) - PACKAGE_SELECT_INTRO_PIN_MARGIN_PX;
+  const cardsRect = frame.cards.getBoundingClientRect();
+  const nextTop = area.scrollTop + (cardsRect.top - areaRect.top) - PACKAGE_SELECT_INTRO_PIN_MARGIN_PX;
   applyScrollTop(area, nextTop, behavior);
   return true;
 }
@@ -4628,6 +4622,7 @@ class ChatUI {
     this.messagesLoadCaptureHandler = null;
     this.messagesMutationObserver = null;
     this.mutationScrollScheduled = false;
+    this.packageSelectStagingTimer = null;
     this.orderCountdownBanner = null;
     this.countdownStarted = false;
     this.messageRenderer = new MessageRenderer(bus, avatarSrc);
@@ -4659,6 +4654,7 @@ class ChatUI {
       this.interpolateDebug = Boolean(payload.debug);
       this.lastNodeWasTerminal = Boolean(payload.node.terminal);
       this.lastRenderedNode = payload.node;
+      this.clearPackageSelectStaging();
       this.removeTypingIndicator();
       this.renderNode(payload.node, this.lastContext);
       this.syncFooterLinks(payload.node);
@@ -4865,8 +4861,34 @@ class ChatUI {
     });
   }
   renderNode(node, context = {}, options) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b;
     const readOnly = Boolean(options == null ? void 0 : options.readOnly);
+    const stagePackageSelect = !readOnly && ((_a = node.media) == null ? void 0 : _a.type) === "package_select";
+    if (stagePackageSelect) {
+      const introText = (_b = node.message) == null ? void 0 : _b.trim();
+      if (introText) {
+        this.appendNodeContent({ ...node, media: void 0 }, context, true);
+      }
+      this.showTypingIndicator();
+      this.pendingForceScroll = false;
+      this.scrollToLatest(true);
+      this.packageSelectStagingTimer = setTimeout(() => {
+        this.packageSelectStagingTimer = null;
+        if (!this.messagesArea) return;
+        this.removeTypingIndicator();
+        const cardsNode = introText ? { ...node, message: void 0 } : node;
+        this.appendNodeContent(cardsNode, context, readOnly);
+        this.scrollToLatest(true);
+      }, PACKAGE_SELECT_CARD_STAGING_MS);
+      return;
+    }
+    this.appendNodeContent(node, context, readOnly);
+    const force = this.pendingForceScroll;
+    this.pendingForceScroll = false;
+    this.scrollToLatest(force);
+  }
+  appendNodeContent(node, context, readOnly) {
+    var _a, _b, _c, _d, _e, _f, _g;
     const hasForm = Boolean((_c = (_b = (_a = node.input) == null ? void 0 : _a.form) == null ? void 0 : _b.fields) == null ? void 0 : _c.length);
     const skipEmptyIntroBubble = hasForm && !((_d = node.message) == null ? void 0 : _d.trim()) && !node.media;
     if (!skipEmptyIntroBubble) {
@@ -4924,9 +4946,6 @@ class ChatUI {
     if (this.inputField) {
       this.inputField.placeholder = this.inputManager.getPlaceholder();
     }
-    const force = this.pendingForceScroll;
-    this.pendingForceScroll = false;
-    this.scrollToLatest(force);
   }
   /** Same key mapping as `ConversationEngine.processFormSubmit`, so `submitMessage` can interpolate before the engine runs. */
   mergeFormValuesIntoContext(base, node, values) {
@@ -4960,8 +4979,15 @@ class ChatUI {
     this.messagesArea.appendChild(userMsg);
     this.scrollToLatest(true);
   }
+  clearPackageSelectStaging() {
+    if (this.packageSelectStagingTimer !== null) {
+      clearTimeout(this.packageSelectStagingTimer);
+      this.packageSelectStagingTimer = null;
+    }
+  }
   clearTranscript() {
     if (!this.messagesArea) return;
+    this.clearPackageSelectStaging();
     this.messagesArea.replaceChildren();
     this.removeTypingIndicator();
     this.followLatest = true;
@@ -4989,6 +5015,7 @@ class ChatUI {
   }
   unmount() {
     var _a, _b;
+    this.clearPackageSelectStaging();
     (_a = this.orderCountdownBanner) == null ? void 0 : _a.stop();
     this.orderCountdownBanner = null;
     this.countdownStarted = false;
@@ -5089,8 +5116,8 @@ class ChatUI {
    * Scrolls so the latest message is in view. When `force` is false, scrolls only if the user is
    * following new messages (`followLatest`) or is still near the bottom (instantaneous layout).
    * `force` is used after `startFlow`, option clicks, and user-sent messages.
-   * Package-select-only rows frame the preceding intro message with the card grid so the
-   * prompt stays visible above the cards on short mobile viewports.
+   * Package-select-only rows pin the card grid to the top so the intro prompt
+   * scrolls out of view and the 2×2 cards fill one viewport.
    */
   scrollToLatest(force) {
     const hasPackageFrame = Boolean(findPackageSelectFrame(this.messagesArea));

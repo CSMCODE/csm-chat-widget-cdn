@@ -35,6 +35,7 @@ export declare class ChatUI {
     private messagesLoadCaptureHandler;
     private messagesMutationObserver;
     private mutationScrollScheduled;
+    private packageSelectStagingTimer;
     private orderCountdownBanner;
     private countdownStarted;
     constructor(bus: EventBus, avatarSrc: string);
@@ -46,10 +47,12 @@ export declare class ChatUI {
     renderNode(node: FlowNode, context?: Record<string, unknown>, options?: {
         readOnly?: boolean;
     }): void;
+    private appendNodeContent;
     /** Same key mapping as `ConversationEngine.processFormSubmit`, so `submitMessage` can interpolate before the engine runs. */
     private mergeFormValuesIntoContext;
     private submitInput;
     private renderUserMessage;
+    private clearPackageSelectStaging;
     private clearTranscript;
     private hydrateTranscript;
     unmount(): void;
@@ -63,8 +66,8 @@ export declare class ChatUI {
      * Scrolls so the latest message is in view. When `force` is false, scrolls only if the user is
      * following new messages (`followLatest`) or is still near the bottom (instantaneous layout).
      * `force` is used after `startFlow`, option clicks, and user-sent messages.
-     * Package-select-only rows frame the preceding intro message with the card grid so the
-     * prompt stays visible above the cards on short mobile viewports.
+     * Package-select-only rows pin the card grid to the top so the intro prompt
+     * scrolls out of view and the 2×2 cards fill one viewport.
      */
     private scrollToLatest;
     private syncFooterCtaContent;

@@ -1,5 +1,7 @@
-/** Margin when framing the package intro + cards in the transcript. */
+/** Margin when pinning the package card grid to the top of the transcript. */
 export declare const PACKAGE_SELECT_INTRO_PIN_MARGIN_PX = 8;
+/** Pause after the intro message, with a typing row, before the card grid mounts. */
+export declare const PACKAGE_SELECT_CARD_STAGING_MS = 650;
 export declare function isPackageSelectOnlyRow(el: Element | null | undefined): boolean;
 export type PackageSelectFrame = {
     readonly intro: HTMLElement;
@@ -23,9 +25,7 @@ export declare function findPackageSelectIntroPinTarget(messagesArea: HTMLElemen
  */
 export declare function pinPackageSelectIntroToTranscriptTop(pinTarget: HTMLElement, behavior?: ScrollBehavior): void;
 /**
- * Frame intro message + package cards as one scroll unit:
- * - Keep intro near the top of the transcript.
- * - When intro + cards fit in the viewport, both stay fully visible.
- * - When taller, still keep intro at top and as much of the card grid as fits.
+ * Pin the package card grid to the top of `.cw-messages` so the intro prompt
+ * scrolls out of view and the 2×2 cards can fill a single viewport.
  */
 export declare function framePackageSelectInTranscript(messagesArea: HTMLElement | null | undefined, behavior?: ScrollBehavior): boolean;

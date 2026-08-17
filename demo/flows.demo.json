@@ -381,6 +381,10 @@
           },
           "onEnter": [
             {
+              "type": "wait",
+              "ms": 700
+            },
+            {
               "type": "goToNode",
               "nodeId": "order_choose_package_cards_cod"
             }
@@ -394,6 +398,10 @@
             "enabled": false
           },
           "onEnter": [
+            {
+              "type": "wait",
+              "ms": 700
+            },
             {
               "type": "goToNode",
               "nodeId": "order_choose_package_cards_prepay"
