@@ -5700,4 +5700,5 @@ export {
   widget as w
 };
 
-/* cw-ghost-alias 2026-08-22T21:43:13Z */ -> index-BpjUL6Lu.mjs
+/* cw-ghost-alias 2026-08-22T22:53:17.958Z */
+ -> index.mjs
