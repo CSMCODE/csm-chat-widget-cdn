@@ -1241,6 +1241,7 @@ class ConversationEngine {
     this.isTransitioning = false;
     this.pendingTypingTimer = null;
     this.pendingWaitTimer = null;
+    this.skipNextTypingDelay = false;
     this.renderGeneration = 0;
     this.restoreHydrationRender = false;
     this.isResumeFastForward = false;
@@ -1428,6 +1429,7 @@ class ConversationEngine {
   clearSession() {
     this.clearPendingTyping();
     this.clearPendingWait();
+    this.skipNextTypingDelay = false;
     this.activeFlowId = null;
     this.activeNodeId = null;
     this.history = [];
@@ -1485,6 +1487,10 @@ class ConversationEngine {
         if (resumeMode || ms <= 0) {
           continue;
         }
+        if (this.sliceWillNavigate(actions, next)) {
+          this.bus.emit("__typingStart", {});
+          this.skipNextTypingDelay = true;
+        }
         this.pendingWaitTimer = setTimeout(() => {
           this.pendingWaitTimer = null;
           this.runActionSlice(actions, next, userInput, resumeMode);
@@ -1519,7 +1525,17 @@ class ConversationEngine {
     if (this.pendingWaitTimer !== null) {
       clearTimeout(this.pendingWaitTimer);
       this.pendingWaitTimer = null;
+      this.skipNextTypingDelay = false;
     }
+  }
+  sliceWillNavigate(actions, fromIndex) {
+    for (let i = fromIndex; i < actions.length; i++) {
+      const type = actions[i].type;
+      if (type === "goToNode" || type === "startFlow" || type === "goToFlowStart" || type === "resetFlow" || type === "back") {
+        return true;
+      }
+    }
+    return false;
   }
   nodeWaitsForUser(node) {
     var _a, _b, _c, _d;
@@ -1588,7 +1604,11 @@ class ConversationEngine {
     this.renderGeneration += 1;
     const generation = this.renderGeneration;
     this.bus.emit("nodeEntered", { nodeId: node.id, flowId });
-    const immediate = Boolean(this.isResumeFastForward || (options == null ? void 0 : options.immediate) || node.immediateRender);
+    const waitAlreadyAnnouncedTyping = this.skipNextTypingDelay;
+    this.skipNextTypingDelay = false;
+    const immediate = Boolean(
+      this.isResumeFastForward || (options == null ? void 0 : options.immediate) || node.immediateRender || waitAlreadyAnnouncedTyping
+    );
     const delay = immediate || this.typingDelayMs <= 0 ? 0 : this.typingDelayMs;
     if (delay === 0) {
       this.emitRenderAndFollowup(node, flowId, options);
@@ -1775,7 +1795,7 @@ class MessageRenderer {
       const ph = document.createElement("div");
       ph.className = "cw-package-select-placeholder";
       wrapper.appendChild(ph);
-      import("./PackageSelectRenderer-Cl4zqLrS.mjs").then((module) => {
+      import("./PackageSelectRenderer-B9kv2aq7.mjs").then((module) => {
         module.PackageSelectRenderer.render(node, ph, context, userInput, debug, bus);
         ph.dispatchEvent(new CustomEvent("cw-package-select-rendered", { bubbles: true }));
       }).catch((err) => {
@@ -2967,7 +2987,7 @@ const BASE_CSS = `
   -webkit-appearance: none;
   position: relative;
   overflow: visible;
-  container-type: inline-size;
+  container-type: size;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -3146,7 +3166,7 @@ const BASE_CSS = `
     0 0 20px rgba(139, 92, 246, 0.45);
 }
 
-/* Title + offer stay tight; leftover card height is empty space above quantity. */
+/* Title + offer stay tight under the art; leftover height grows the image, not a blank band. */
 #chat-widget-root .cw-package-select-copy {
   flex: 0 0 auto;
   min-height: 0;
@@ -3234,7 +3254,6 @@ const BASE_CSS = `
   justify-content: center;
   gap: 8px;
   width: 100%;
-  margin-top: auto;
   padding: 12px 12px 14px;
   box-sizing: border-box;
   overflow: hidden;
@@ -4195,8 +4214,8 @@ const BASE_CSS = `
   }
 
   #chat-widget-root .cw-package-select-list {
-    gap: 12px;
-    padding: 18px 4px 8px;
+    gap: 10px;
+    padding: 14px 4px 6px;
   }
 
   #chat-widget-root .cw-package-select-card {
@@ -4211,63 +4230,95 @@ const BASE_CSS = `
   }
 
   #chat-widget-root .cw-package-select-badge {
-    padding: 5px 12px 6px;
-    font-size: max(0.54rem, 8px);
+    padding: 4px 10px 5px;
+    font-size: max(0.5rem, 8px);
   }
 
-  /* Mobile: image stays content-sized so leftover height is the empty band above quantity. */
+  /* Mobile: art grows with leftover height so quantity sits under the offer. */
   #chat-widget-root .cw-package-select-thumb-wrap {
-    flex: 0 0 auto;
-    padding: 22px 12px 10px;
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    padding: 3.2cqh 10px 1cqh;
   }
 
   #chat-widget-root .cw-package-select-thumb {
-    width: 90%;
-    max-width: 90%;
+    width: auto;
+    max-width: 86%;
     height: auto;
-    max-height: none;
+    max-height: 100%;
   }
 
   #chat-widget-root .cw-package-select-copy {
-    padding: 2px 10px 4px;
-    gap: 10px;
+    padding: 0 8px 2px;
+    gap: 1.6cqh;
   }
 
   #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-copy {
-    padding-bottom: 2px;
+    padding-bottom: 0;
   }
 
   #chat-widget-root .cw-package-select-title {
-    font-size: clamp(0.82rem, 3.5vw, 0.96rem);
+    font-size: clamp(0.64rem, 5.4cqh, 0.9rem);
   }
 
   #chat-widget-root .cw-package-select-offer-panel {
-    padding: 9px 7px 10px;
+    padding: 1.5cqh 6px;
     border-radius: 999px;
   }
 
   #chat-widget-root .cw-package-select-card--has-availability .cw-package-select-offer-panel {
-    padding: 9px 7px 10px;
+    padding: 1.5cqh 6px;
   }
 
   #chat-widget-root .cw-package-select-offer {
-    font-size: clamp(0.54rem, 7.2cqi, 0.7rem);
+    font-size: clamp(0.48rem, 4.6cqh, 0.66rem);
     white-space: nowrap;
   }
 
   #chat-widget-root .cw-package-select-availability {
-    padding: 11px 10px 13px;
-    gap: 7px;
+    padding: 1.6cqh 10px 2cqh;
+    gap: 6px;
   }
 
   #chat-widget-root .cw-availability-text {
-    font-size: clamp(0.64rem, 2.4vw, 0.74rem);
+    font-size: clamp(0.52rem, 3.8cqh, 0.7rem);
   }
 
   #chat-widget-root .cw-package-select-oos-banner {
-    padding: 5px 6px 6px;
-    font-size: clamp(0.46rem, 2vw, 0.58rem);
+    padding: 4px 6px 5px;
+    font-size: clamp(0.42rem, 2.8cqh, 0.56rem);
     letter-spacing: 0.05em;
+  }
+}
+
+@media (max-width: 420px) and (max-height: 760px) {
+  #chat-widget-root .cw-package-select-list {
+    gap: 8px;
+    padding: 10px 2px 4px;
+  }
+
+  #chat-widget-root .cw-footer-links--stack {
+    padding: 6px var(--cw-input-bar-gutter) 8px;
+  }
+
+  #chat-widget-root .cw-footer-links--stack .cw-footer-link-btn {
+    padding: 6px 10px;
+    gap: 8px;
+    font-size: 0.75rem;
+  }
+
+  #chat-widget-root .cw-footer-links--stack .cw-footer-link-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+  }
+
+  #chat-widget-root .cw-footer-links--stack .cw-footer-link-icon svg {
+    width: 15px;
+    height: 15px;
   }
 }
 `;
@@ -5649,4 +5700,4 @@ export {
   widget as w
 };
 
-/* cw-ghost-alias 2026-08-17T20:01:58Z */ -> index-DFLv1lvo.mjs
+/* cw-ghost-alias 2026-08-22T21:43:13Z */ -> index-BpjUL6Lu.mjs

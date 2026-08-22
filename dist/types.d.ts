@@ -44,6 +44,7 @@ export type ActionType = {
 /**
  * Pauses before running subsequent actions in the same array (e.g. onEnter / onSubmit).
  * `ms` is clamped to 0–60_000. Handled in ConversationEngine, not ActionProcessor.
+ * If later actions navigate to another node, the typing indicator is shown for the wait.
  */
  | {
     readonly type: "wait";

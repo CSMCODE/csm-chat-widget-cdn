@@ -1,5 +1,5 @@
 import { i as interpolateAll } from "./faq-BVDEs-g4.mjs";
-import { A as AVAILABILITY_LABEL } from "./index-DFLv1lvo.mjs";
+import { A as AVAILABILITY_LABEL } from "./index-BpjUL6Lu.mjs";
 const EUR_REGEX = /EUR/gi;
 const AMOUNT_REGEX = /\d[\d.,]*(?:\s*€)?/g;
 const DEFAULT_TIERS = ["bronze", "silver", "gold", "black"];
@@ -179,4 +179,4 @@ export {
   UNAVAILABLE_LABEL
 };
 
-/* cw-ghost-alias 2026-08-17T20:01:58Z */ -> PackageSelectRenderer-Cl4zqLrS.mjs
+/* cw-ghost-alias 2026-08-22T21:43:13Z */ -> PackageSelectRenderer-B9kv2aq7.mjs

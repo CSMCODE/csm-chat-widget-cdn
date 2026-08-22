@@ -19,6 +19,11 @@ export declare class ConversationEngine {
     private isTransitioning;
     private pendingTypingTimer;
     private pendingWaitTimer;
+    /**
+     * Set when a `wait` already showed the typing indicator for an upcoming navigation.
+     * The next `renderNode` skips `typingDelay` so the bubble appears as soon as the wait ends.
+     */
+    private skipNextTypingDelay;
     private renderGeneration;
     /** True only while rendering a node rehydrated from persisted state (`restoreState`). Suppresses `flowCompleted` on rehydration. */
     private restoreHydrationRender;
@@ -56,6 +61,7 @@ export declare class ConversationEngine {
     getState(): WidgetState;
     private clearPendingTyping;
     private clearPendingWait;
+    private sliceWillNavigate;
     private nodeWaitsForUser;
     private fastForwardAutoChainFromActiveNode;
     private warnMissingContextKeysForRender;
